@@ -4,7 +4,8 @@
 using namespace KamataEngine;
 
 // Windowsアプリでのエントリーポイント
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
 
 	// エンジン初期化
 	Initialize(L"LE3D_02_イセダ_コテツ");
