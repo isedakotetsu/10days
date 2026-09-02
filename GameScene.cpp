@@ -1,7 +1,13 @@
 #include "GameScene.h"
+using namespace KamataEngine;
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() 
 {
+
+    // ワールドトランスフォーム
+    worldTransform_.Initialize();
+
     // プレイヤーモデルを読み込む
     playerModel_ = Model::CreateFromOBJ("player", true);
 
@@ -32,12 +38,27 @@ void GameScene::Initialize()
 
     //デバックカメラ
     debugCamera_ = new DebugCamera(1280, 720);
+	// カメラを固定
+	camera_.translation_ = {0.0f, 0.0f, -50.0f};
+
+	camera_.rotation_ = {0.0f, 0.0f, 0.0f};
+
+	// デバックカメラ
+	debugCamera = new DebugCamera(1280, 720);
+
+	// モデル読み込み
+	modelBloc_ = Model::CreateFromOBJ("cube");
+
+	bloc_ = new bloc();
+	bloc_->Initialize(modelBloc_, &camera_);
 }
 
 void GameScene::Update() 
 {
     // プレイヤーを更新
     player_->Update();
+
+    bloc_->Update();
 
     // カメラを更新
     camera_.UpdateMatrix();
@@ -78,6 +99,8 @@ void GameScene::Draw()
 
     // プレイヤーを描画
     player_->Draw(camera_);
+
+    bloc_->Draw();
 
     // 3Dモデルの描画終了
     Model::PostDraw();

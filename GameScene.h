@@ -1,6 +1,7 @@
 #pragma once
 #include <KamataEngine.h>
 #include "Player.h"
+#include "bloc.h"
 
 using namespace KamataEngine;
 
@@ -10,6 +11,8 @@ public:
 	void Initialize();
 
 	void Update();
+
+	void Camera();
 
 	void Draw();
 
@@ -31,5 +34,12 @@ private:
 
     //デバックカメラ
     KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+    // ワールドトランスフォーム
+    KamataEngine::WorldTransform worldTransform_;
+
+    bloc* bloc_ = nullptr;
+
+    KamataEngine::Model* modelBloc_ = nullptr;
 
 };
