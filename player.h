@@ -6,13 +6,17 @@ class Player
 {
 public:
     // 初期化
-    void Initialize(KamataEngine::Model* model);
+	void Initialize(KamataEngine::Model* model);
 
     // 更新
     void Update();
 
     // 描画
     void Draw(const KamataEngine::Camera& camera);
+
+    KamataEngine::Vector3 GetPosition() const { return worldTransform_.translation_; }
+
+	KamataEngine::Vector3 GetHalfSize() const { return halfSize_; }
 
 private:
     // プレイヤーモデル
@@ -41,4 +45,6 @@ private:
 
     // 地面の高さ
     static inline const float kGroundY = 0.0f;
+
+    KamataEngine::Vector3 halfSize_ = {1.0f, 1.0f, 1.0f};
 };

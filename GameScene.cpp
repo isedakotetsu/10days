@@ -1,16 +1,41 @@
 #include "GameScene.h"
+#include <cmath>
+
+using namespace KamataEngine;
+
+//障害物＆プレイヤーの当たり判定処理
+bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB) 
+{
+	if (std::abs(posA.x - posB.x) > sizeA.x + sizeB.x) 
+    {
+		return false;
+	}
+
+	if (std::abs(posA.y - posB.y) > sizeA.y + sizeB.y) 
+    {
+		return false;
+	}
+
+	if (std::abs(posA.z - posB.z) > sizeA.z + sizeB.z)
+    {
+		return false;
+	}
+
+	return true;
+}
 
 void GameScene::Initialize() 
 {
 	model_ = Model::Create();
 	worldTransform_.Initialize();
 	camera_.Initialize();
-    // プレイヤーモデルを読み込む
-    playerModel_ = Model::CreateFromOBJ("player", true);
+   
 
     // プレイヤーを生成
     player_ = new Player();
-
+	// プレイヤーモデルを読み込む
+	playerModel_ = Model::CreateFromOBJ("player", true);
+	
     // プレイヤーを初期化
     player_->Initialize(playerModel_);
 
@@ -39,15 +64,28 @@ void GameScene::Initialize()
 	obstacles_ = new obstacles();
 	Obstaclesmodel_ = Model::CreateFromOBJ("cube");
 
-	ObstaclesPosition_ = {0.0f, -70.0f, 40.0f};
+	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
 }
 
 void GameScene::Update() 
 {
-    // プレイヤーを更新
-    player_->Update();
-    obstacles_->UpDate();
+	// ゲームプレイ中だけ更新
+	if (phase_ == Phase::kPlay) 
+    {
+		
+		obstacles_->UpDate();
+		player_->Update();
+
+		
+
+		if (IsCollisionAABB(player_->GetPosition(), player_->GetHalfSize(),
+            obstacles_->GetPosition(), obstacles_->GetHalfSize()))
+        {
+			
+			phase_ = Phase::kDeath;
+		}
+	}
 
     // カメラを更新
     camera_.UpdateMatrix();
@@ -86,11 +124,12 @@ void GameScene::Draw()
     // 3Dモデルの描画開始
     Model::PreDraw();
 
+    // 障害物を描画
+	obstacles_->Draw(camera_);
     // プレイヤーを描画
     player_->Draw(camera_);
     
-    // 障害物を描画
-    obstacles_->Draw(camera_);
+    
 
     // 3Dモデルの描画終了
     Model::PostDraw();

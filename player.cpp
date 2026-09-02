@@ -7,7 +7,6 @@ void Player::Initialize(Model* model)
 {
     // GameSceneからモデルを受け取る
     model_ = model;
-
     // キーボード入力を取得
     input_ = Input::GetInstance();
 
@@ -27,7 +26,7 @@ void Player::Initialize(Model* model)
     worldTransform_.translation_ = 
     {
         0.0f,
-        0.0f,
+        5.0f,
         0.0f
     };
 

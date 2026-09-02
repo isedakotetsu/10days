@@ -1,7 +1,92 @@
 #include "GameScene.h"
 #include "KamataEngine.h"
+#include "TitleScene.h"
+#include "GameClear.h"
+#include "GameOver.h"
 
-using namespace KamataEngine;
+
+
+TitleScene* titleScene = nullptr;
+GameScene* gameScene = nullptr;
+GameClear* gameClearScene = nullptr;
+GameOver* gameOverScene = nullptr;
+
+enum class Scene {
+	kUnknown = 0,
+	kTitle,
+	kGame,
+	kGameOver,
+	kGameClear,
+};
+
+// 現在シーン（型）
+Scene scene = Scene::kTitle;
+void ChangeScene() {
+
+	switch (scene)
+	{
+	case Scene::kTitle:
+		
+
+		if (titleScene->IsFinished()) 
+		{
+
+			
+			scene = Scene::kGame;
+
+			
+
+			delete titleScene;
+			titleScene = nullptr;
+
+			gameScene = new GameScene;
+			gameScene->Initialize();
+		}
+		break;
+
+	case Scene::kGame:
+		
+		if (gameScene->IsDead()) {
+			scene = Scene::kGameOver;
+
+			delete gameScene;
+			gameScene = nullptr;
+
+			gameOverScene = new GameOver;
+			gameOverScene->Initialize();
+		}
+
+		break;
+
+	case Scene::kGameOver:
+		
+
+		break;
+
+	case Scene::kGameClear:
+		
+
+		break;
+	}
+}
+
+void DrawScene() 
+{
+	switch (scene) {
+	case Scene::kTitle:
+		titleScene->Draw();
+		break;
+	case Scene::kGame:
+		gameScene->Draw();
+		break;
+	case Scene::kGameOver:
+		gameOverScene->Draw();
+		break;
+	case Scene::kGameClear:
+		gameClearScene->Draw();
+		break;
+	}
+}
 
 // Windowsアプリでのエントリーポイント
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -12,10 +97,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// DirectX取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-	// シーン生成
-	GameScene* gameScene = nullptr;
-	gameScene = new GameScene();
-	gameScene->Initialize();
+	titleScene = new TitleScene;
+	titleScene->Initialize();
 
 	// メインループ
 	while (true) 
@@ -26,15 +109,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		{
 			break;
 		}
+		// シーンごとにUpdate
+		switch (scene) {
+		case Scene::kTitle:
+			titleScene->UpDate();
+			break;
+		case Scene::kGame:
+			// ImGuiの開始処理
+			gameScene->Update();
 
-		// シーン更新
-		gameScene->Update();
+			break;
+		case Scene::kGameOver:
+			gameOverScene->UpDate();
+			break;
+		case Scene::kGameClear:
+			gameClearScene->UpDate();
+			break;
+		}
+
+		ChangeScene();
 
 		// 描画開始
 		dxCommon->PreDraw();
 
-		// シーン描画
-		gameScene->Draw();
+		DrawScene();
 
 		// 描画終了
 		dxCommon->PostDraw();

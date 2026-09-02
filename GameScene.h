@@ -16,14 +16,20 @@ public:
 
 	~GameScene();
 
+	bool IsFinished() const { return phase_ == Phase::kDeath || phase_ == Phase::kClear; }
+	// 追加: 死亡したかどうかを判定する関数（main.cppで使用）
+	bool IsDead() const { return phase_ == Phase::kDeath; }
+	// クリアしたことを感知する関数
+	bool IsClear() const { return phase_ == Phase::kClear; }
+
 private:
 	KamataEngine::Camera camera_;
 	obstacles* obstacles_ = nullptr;
 	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Model* Obstaclesmodel_ = nullptr;
-
-	 Vector3 ObstaclesPosition_;
+	KamataEngine::Vector3 ObstaclesPosition_;
+	
 	
 
     // プレイヤー
@@ -38,5 +44,15 @@ private:
 
     //デバックカメラ
     KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+
+	enum class Phase {
+		kFadeIn,  
+		kPlay,    
+		kDeath,   
+		kFadeOut, 
+		kClear,   
+	};
+	Phase phase_ = Phase::kPlay;
 
 };
