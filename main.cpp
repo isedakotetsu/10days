@@ -4,7 +4,8 @@
 using namespace KamataEngine;
 
 // Windowsアプリでのエントリーポイント
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) 
+{
 
 	// エンジン初期化
 	Initialize(L"LE3D_02_イセダ_コテツ");
@@ -17,15 +18,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene->Initialize();
 
 	// メインループ
-	while (true) {
+	while (true) 
+	{
 
 		// エンジン更新（終了チェック）
-		if (Update()) {
+		if (Update()) 
+		{
 			break;
 		}
 
 		// シーン更新
-		gameScene->UpDate();
+		gameScene->Update();
 
 		// 描画開始
 		dxCommon->PreDraw();
