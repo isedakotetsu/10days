@@ -1,13 +1,16 @@
 #pragma once
 #include <KamataEngine.h>
 #include "obstacles.h"
-using namespace KamataEngine;
+#include "Player.h"
 
-class GameScene {
+
+
+class GameScene 
+{
 public:
 	void Initialize();
 
-	void UpDate();
+	void Update();
 
 	void Draw();
 
@@ -22,4 +25,18 @@ private:
 
 	 Vector3 ObstaclesPosition_;
 	
+
+    // プレイヤー
+    Player* player_ = nullptr;
+   
+    // プレイヤーモデル
+	KamataEngine::Model* playerModel_ = nullptr;
+
+
+    //デバックカメラ有効
+    bool isDebugCameraActive_ = false;
+
+    //デバックカメラ
+    KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
 };
