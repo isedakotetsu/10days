@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		// シーン更新
-		gameScene->UpDate();
+		gameScene->Update();
 
 		// 描画開始
 		dxCommon->PreDraw();
