@@ -1,7 +1,7 @@
 #pragma once
 #include <KamataEngine.h>
 #include "Player.h"
-#include "bloc.h"
+#include "block.h"
 
 using namespace KamataEngine;
 
@@ -11,8 +11,6 @@ public:
 	void Initialize();
 
 	void Update();
-
-	void Camera();
 
 	void Draw();
 
@@ -35,11 +33,17 @@ private:
     //デバックカメラ
     KamataEngine::DebugCamera* debugCamera_ = nullptr;
 
-    // ワールドトランスフォーム
-    KamataEngine::WorldTransform worldTransform_;
+    block* block_ = nullptr;
 
-    bloc* bloc_ = nullptr;
+    KamataEngine::Model* modelBlock_ = nullptr;
 
-    KamataEngine::Model* modelBloc_ = nullptr;
+    // 通常時のカメラ位置
+    KamataEngine::Vector3 cameraOffset_ = {0.0f, 3.0f, -12.0f};
+
+    // この高さを超えたら、積み上げたブロックに合わせてカメラを上げる
+    static inline const float kCameraFollowStartY = 4.0f;
+
+    // 追従中、プレイヤーを画面中央より少し上に表示する値
+    static inline const float kCameraPlayerScreenY = 1.0f;
 
 };

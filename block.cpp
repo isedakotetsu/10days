@@ -1,10 +1,10 @@
-#include "bloc.h"
+#include "block.h"
 #include <numbers>
 
 using namespace KamataEngine;
 
-void bloc::Initialize(Model* model, Camera* camera) {
-
+void block::Initialize(Model* model, Camera* camera) 
+{
 	assert(model);
 	assert(camera);
 
@@ -19,21 +19,21 @@ void bloc::Initialize(Model* model, Camera* camera) {
 
 	worldTransform_.TransferMatrix();
 
-	// カメラの初期位置を保存
-	cameraStartPosition_ = camera_->translation_;
 }
 
-void bloc::Move() {
-
+void block::Move() 
+{
 	// ========================================
 	// 落下中
 	// ========================================
-	if (isFalling_) {
+	if (isFalling_) 
+	{
 
 		worldTransform_.translation_.y -= fallSpeed_;
 
 		// 画面外まで落ちたら止める
-		if (worldTransform_.translation_.y < -20.0f) {
+		if (worldTransform_.translation_.y < -20.0f) 
+		{
 			isFalling_ = false;
 
 			// 積んでいたブロックを全部削除
@@ -42,53 +42,53 @@ void bloc::Move() {
 			// 最初の位置に戻す
 			worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 
-			// カメラも初期位置へ
-			camera_->translation_ = cameraStartPosition_;
-
 			// 最初の移動方向に戻す
 			moveDirection_ = 0.2f;
 		}
 
-		worldTransform_.UpdateMatrix();
+		worldTransform_.matWorld_.m[3][0] = worldTransform_.translation_.x;
+		worldTransform_.matWorld_.m[3][1] = worldTransform_.translation_.y;
+		worldTransform_.matWorld_.m[3][2] = worldTransform_.translation_.z;
 		worldTransform_.TransferMatrix();
 
 		return;
 	}
 
 	// ========================================
-	// SPACEを押したら固定
+	// ENTERを押したら固定（SPACEはプレイヤーのジャンプに使用）
 	// ========================================
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) 
+	{
 		// ------------------------------------
 		// 下にブロックがある場合
 		// ------------------------------------
-		if (!blocks_.empty()) {
+		if (!blocks_.empty()) 
+		{
 
 			// 一番最後に固定したブロック
-			WorldTransform* bottomBlock = blocks_.back().get();
+			WorldTransform* bottomblockk = blocks_.back().get();
 
 			// 現在のブロックの中心
 			float currentCenterX = worldTransform_.translation_.x;
 
 			// 下のブロックの中心
-			float bottomCenterX = bottomBlock->translation_.x;
+			float bottomCenterX = bottomblockk->translation_.x;
 
 			// 現在のブロックの左端・右端
-			// float currentLeft = currentCenterX - blockWidth_ / 2.0f;
+			// float currentLeft = currentCenterX - blockkWidth_ / 2.0f;
 
-			// float currentRight = currentCenterX + blockWidth_ / 2.0f;
+			// float currentRight = currentCenterX + blockkWidth_ / 2.0f;
 
 		// 下のブロックの左端・右端
-			float bottomLeft = bottomCenterX - blockWidth_ / 2.0f;
+			float bottomLeft = bottomCenterX - blockkWidth_ / 2.0f;
 
-			float bottomRight = bottomCenterX + blockWidth_ / 2.0f;
+			float bottomRight = bottomCenterX + blockkWidth_ / 2.0f;
 
 			// ====================================
 			// 当たり判定を端から25%内側にする
 			// ====================================
 
-			float hitRange = blockWidth_ * 0.25f;
+			float hitRange = blockkWidth_ * 0.25f;
 
 			float hitLeft = bottomLeft + hitRange;
 
@@ -104,7 +104,8 @@ void bloc::Move() {
 			// ====================================
 			// 外れていたら落下
 			// ====================================
-			if (!isHit) {
+			if (!isHit) 
+			{
 
 				isFalling_ = true;
 
@@ -116,27 +117,27 @@ void bloc::Move() {
 		// 重なっているので固定
 		// ====================================
 
-		auto newBlock = std::make_unique<WorldTransform>();
+		auto newblockk = std::make_unique<WorldTransform>();
 
-		newBlock->Initialize();
+		newblockk->Initialize();
 
 		// 今のブロックの位置を保存
-		newBlock->translation_ = worldTransform_.translation_;
+		newblockk->translation_ = worldTransform_.translation_;
 
-		newBlock->rotation_ = worldTransform_.rotation_;
+		newblockk->rotation_ = worldTransform_.rotation_;
 
-		newBlock->UpdateMatrix();
-		newBlock->TransferMatrix();
+		newblockk->matWorld_.m[3][0] = newblockk->translation_.x;
+		newblockk->matWorld_.m[3][1] = newblockk->translation_.y;
+		newblockk->matWorld_.m[3][2] = newblockk->translation_.z;
+		newblockk->TransferMatrix();
 
 		// 固定ブロックとして追加
-		blocks_.push_back(std::move(newBlock));
+		blocks_.push_back(std::move(newblockk));
 		// ====================================
 		// 次のブロックを1個上へ
 		// ====================================
 		worldTransform_.translation_.y += 2.0f;
 
-		//カメラがblocについていく
-		camera_->translation_.y += 2.0f;
 	}
 
 	// ========================================
@@ -154,18 +155,23 @@ void bloc::Move() {
 	if (worldTransform_.translation_.x <= -15.0f) {
 		moveDirection_ = 0.2f;
 	}
-	// ★ 行列を再計算する処理を追加
-	worldTransform_.UpdateMatrix();
+	// 座標をワールド行列へ反映
+	worldTransform_.matWorld_.m[3][0] = worldTransform_.translation_.x;
+	worldTransform_.matWorld_.m[3][1] = worldTransform_.translation_.y;
+	worldTransform_.matWorld_.m[3][2] = worldTransform_.translation_.z;
 	worldTransform_.TransferMatrix();
 }
 
-void bloc::Update() { Move(); }
+void block::Update() 
+{ 
+	Move(); 
+}
 
-void bloc::Draw() {
-
+void block::Draw() 
+{
 	// 積み上げたブロック
-	for (auto& block : blocks_) {
-
+	for (auto& block : blocks_) 
+	{
 		model_->Draw(*block, *camera_);
 	}
 

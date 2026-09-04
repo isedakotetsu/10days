@@ -1,6 +1,8 @@
 #pragma once
 #include <KamataEngine.h>
 
+class block;
+
 class Player
 {
 public:
@@ -8,10 +10,16 @@ public:
     void Initialize(KamataEngine::Model* model);
 
     // 更新
-    void Update();
+    void Update(const block* blockObject);
 
     // 描画
     void Draw(const KamataEngine::Camera& camera);
+
+    // カメラ追従用のプレイヤー座標
+    const KamataEngine::Vector3& GetWorldPosition() const
+    {
+        return worldTransform_.translation_;
+    }
 
 private:
     // プレイヤーモデル
@@ -40,4 +48,15 @@ private:
 
     // 地面の高さ
     static inline const float kGroundY = 0.0f;
+
+    // 当たり判定ではtranslation_を足元の座標として扱う
+    static inline const float kPlayerHalfWidth = 0.5f;
+    static inline const float kPlayerHeight = 2.0f;
+
+    // 1個のブロックとの当たり判定
+    void ResolveBlockCollision(
+        const KamataEngine::WorldTransform& blockWorldTransform,
+        float blockWidth,
+        float blockHeight,
+        const KamataEngine::Vector3& previousPosition);
 };

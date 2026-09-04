@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 
 	// エンジン初期化
-	Initialize(L"LE3D_02_イセダ_コテツ");
+	Initialize(L"3062");
 	// DirectX取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 

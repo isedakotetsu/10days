@@ -1,12 +1,8 @@
 #include "GameScene.h"
 using namespace KamataEngine;
-GameScene::~GameScene() {}
 
 void GameScene::Initialize() 
 {
-
-    // ワールドトランスフォーム
-    worldTransform_.Initialize();
 
     // プレイヤーモデルを読み込む
     playerModel_ = Model::CreateFromOBJ("player", true);
@@ -20,13 +16,8 @@ void GameScene::Initialize()
     // カメラを初期化
     camera_.Initialize();
 
-    // カメラの位置
-    camera_.translation_ = 
-    {
-        0.0f,
-        3.0f,
-        -10.0f
-    };
+    // プレイヤーに近いカメラ位置
+    camera_.translation_ = cameraOffset_;
 
     // カメラの向き
     camera_.rotation_ = 
@@ -38,33 +29,21 @@ void GameScene::Initialize()
 
     //デバックカメラ
     debugCamera_ = new DebugCamera(1280, 720);
-	// カメラを固定
-	camera_.translation_ = {0.0f, 0.0f, -50.0f};
-
-	camera_.rotation_ = {0.0f, 0.0f, 0.0f};
-
-	// デバックカメラ
-	debugCamera = new DebugCamera(1280, 720);
-
 	// モデル読み込み
-	modelBloc_ = Model::CreateFromOBJ("cube");
+	modelBlock_ = Model::CreateFromOBJ("cube");
 
-	bloc_ = new bloc();
-	bloc_->Initialize(modelBloc_, &camera_);
+	block_ = new block();
+	block_->Initialize(modelBlock_, &camera_);
 }
 
 void GameScene::Update() 
 {
-    // プレイヤーを更新
-    player_->Update();
+    // 先にブロックを更新し、最新位置で衝突判定する
+    block_->Update();
 
-    bloc_->Update();
+    // プレイヤーを更新してブロックとの衝突を解決
+    player_->Update(block_);
 
-    // カメラを更新
-    camera_.UpdateMatrix();
-
-    //デバックカメラの更新
-    debugCamera_->Update();
 #ifdef _DEBUG
     if (Input::GetInstance()->TriggerKey(DIK_0))
     {
@@ -86,6 +65,27 @@ void GameScene::Update()
     } 
     else
     {
+        // プレイヤーの現在位置を取得
+        const Vector3& playerPosition = player_->GetWorldPosition();
+
+        // X方向は固定する。
+        // Xまで完全追従すると、プレイヤーが止まってブロックが動くように見えるため。
+        camera_.translation_.x = cameraOffset_.x;
+
+        // 通常のジャンプ中はカメラを動かさない。
+        // 高く積まれたブロックへ登ったときだけY方向へ追従する。
+        if (playerPosition.y > kCameraFollowStartY)
+        {
+            camera_.translation_.y = playerPosition.y - kCameraPlayerScreenY;
+        }
+        else
+        {
+            camera_.translation_.y = cameraOffset_.y;
+        }
+
+        // Z方向は一定の距離を保つ
+        camera_.translation_.z = playerPosition.z + cameraOffset_.z;
+
         //ビュープロジェクション行列の”更新”と転送
         camera_.UpdateMatrix();
     }
@@ -100,7 +100,7 @@ void GameScene::Draw()
     // プレイヤーを描画
     player_->Draw(camera_);
 
-    bloc_->Draw();
+    block_->Draw();
 
     // 3Dモデルの描画終了
     Model::PostDraw();
@@ -116,5 +116,12 @@ GameScene::~GameScene()
     delete playerModel_;
     playerModel_ = nullptr;
 
+    delete block_;
+    block_ = nullptr;
+
+    delete modelBlock_;
+    modelBlock_ = nullptr;
+
     delete debugCamera_;
+	debugCamera_ = nullptr;
 }
