@@ -74,10 +74,7 @@ void bloc::Move() {
 			// 下のブロックの中心
 			float bottomCenterX = bottomBlock->translation_.x;
 
-			// 現在のブロックの左端・右端
-			// float currentLeft = currentCenterX - blockWidth_ / 2.0f;
-
-			// float currentRight = currentCenterX + blockWidth_ / 2.0f;
+			
 
 		// 下のブロックの左端・右端
 			float bottomLeft = bottomCenterX - blockWidth_ / 2.0f;

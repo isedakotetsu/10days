@@ -10,7 +10,7 @@ public:
 
 	void Update();
 
-	void Camera();
+	
 
 	void Draw();
 
@@ -24,11 +24,7 @@ private:
 	// カメラ
 	KamataEngine::Camera camera_;
 	
-	// デバックカメラ有効
-	bool isDebugCameraActive = false;
-
-	// デバックカメラ
-	KamataEngine::DebugCamera* debugCamera = nullptr;
+	
 
 	bloc* bloc_ = nullptr;
 
