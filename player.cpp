@@ -67,23 +67,39 @@ void Player::Update(const block* blockObject)
     // 衝突判定前の座標を保存
     Vector3 previousPosition = worldTransform_.translation_;
 
-    // Aキーで左へ移動
-    if (input_->PushKey(DIK_A))
+    // スタン時間を減らす
+    if (stunTimer_ > 0.0f)
     {
-        worldTransform_.translation_.x -= kMoveSpeed;
+        stunTimer_ -= 1.0f / 60.0f;
+
+        // スタン中はその場で完全に停止する
+        if (stunTimer_ > 0.0f)
+        {
+            return;
+        }
     }
 
-    // Dキーで右へ移動
-    if (input_->PushKey(DIK_D))
+    // スタンしていない間だけ操作できる
+    if (stunTimer_ <= 0.0f)
     {
-        worldTransform_.translation_.x += kMoveSpeed;
-    }
+        // Aキーで左へ移動
+        if (input_->PushKey(DIK_A))
+        {
+            worldTransform_.translation_.x -= kMoveSpeed;
+        }
 
-    // 地面にいるとき、スペースキーでジャンプ
-    if (isOnGround_ && input_->TriggerKey(DIK_SPACE))
-    {
-        velocityY_ = kJumpPower;
-        isOnGround_ = false;
+        // Dキーで右へ移動
+        if (input_->PushKey(DIK_D))
+        {
+            worldTransform_.translation_.x += kMoveSpeed;
+        }
+
+        // 地面にいるとき、スペースキーでジャンプ
+        if (isOnGround_ && input_->TriggerKey(DIK_SPACE))
+        {
+            velocityY_ = kJumpPower;
+            isOnGround_ = false;
+        }
     }
 
     // 空中にいる間の処理
@@ -159,6 +175,12 @@ void Player::ResolveBlockCollision(
     float blockHeight,
     const Vector3& previousPosition)
 {
+    // スタン中はブロックとの当たり判定を行わない
+    if (stunTimer_ > 0.0f)
+    {
+        return;
+    }
+
     const float blockHalfWidth = blockWidth / 2.0f;
     const float blockHalfHeight = blockHeight / 2.0f;
 
@@ -202,8 +224,6 @@ void Player::ResolveBlockCollision(
         return;
     }
 
-    const float previousLeft = previousPosition.x - kPlayerHalfWidth;
-    const float previousRight = previousPosition.x + kPlayerHalfWidth;
     const float previousBottom = previousPosition.y - 0.635770f;
     const float previousTop = previousBottom + kPlayerHeight;
 
@@ -226,28 +246,21 @@ void Player::ResolveBlockCollision(
         return;
     }
 
-    // 左右からぶつかった場合
-    if (previousRight <= blockLeft + kContactTolerance)
+    // 左右からぶつかった場合は1.5秒間スタン
+    if (stunTimer_ <= 0.0f)
     {
-        worldTransform_.translation_.x = blockLeft - kPlayerHalfWidth;
+        stunTimer_ = 1.5f;
     }
-    else if (previousLeft >= blockRight - kContactTolerance)
-    {
-        worldTransform_.translation_.x = blockRight + kPlayerHalfWidth;
-    }
-    // 左右に動くブロックから接触された場合
-    else if (worldTransform_.translation_.x < blockWorldTransform.translation_.x)
-    {
-        worldTransform_.translation_.x = blockLeft - kPlayerHalfWidth;
-    }
-    else
-    {
-        worldTransform_.translation_.x = blockRight + kPlayerHalfWidth;
-    }
+
+    // X座標を補正しないことでブロックをすり抜けさせる
+    return;
 }
 
 void Player::Draw(const Camera& camera)
 {
-    // プレイヤーを描画
-    model_->Draw(worldTransform_, camera);
+    // スタン中は表示と非表示を交互に切り替える
+    if (stunTimer_ <= 0.0f || static_cast<int>(stunTimer_ * 10.0f) % 2 == 0)
+    {
+        model_->Draw(worldTransform_, camera);
+    }
 }

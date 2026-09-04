@@ -52,9 +52,9 @@ private:
 	float moveDirection_ = 0.2f;
 
 	// ブロックの横幅
-	float blockkWidth_ = 1.132540f;
+	float blockkWidth_ = 2.0f;
 	// ブロックの高さ
-	float blockHeight_ = 1.128894f;
+	float blockHeight_ = 2.0f;
 
 	// 落下速度
 	float fallSpeed_ = 0.2f;

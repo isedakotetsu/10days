@@ -46,6 +46,9 @@ private:
     // 地面に着いているか
     bool isOnGround_ = true;
 
+    // 側面衝突後のスタン残り時間
+    float stunTimer_ = 0.0f;
+
     // 地面の高さ
     static inline const float kGroundY = 0.635770f;
 

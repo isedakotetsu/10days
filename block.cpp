@@ -13,7 +13,7 @@ void block::Initialize(Model* model, Camera* camera)
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {-15.0f, 0.564447f, 0.0f};
+	worldTransform_.translation_ = {-15.0f, 1.0f, 0.0f};
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
@@ -38,7 +38,7 @@ void block::Move(const Vector3& playerPosition)
 			blocks_.clear();
 
 			// 最初の位置に戻す
-			worldTransform_.translation_ = {-15.0f, 0.564447f, 0.0f};
+			worldTransform_.translation_ = {-15.0f, 1.0f, 0.0f};
 
 			// 最初の移動方向に戻す
 			moveDirection_ = 0.2f;
@@ -129,6 +129,16 @@ void block::Move(const Vector3& playerPosition)
 		// 次のブロックを1個上へ
 		// ====================================
 		worldTransform_.translation_.y += blockHeight_;
+
+		// 次のブロックは現在の進行方向に合う画面端から出現させる
+		if (moveDirection_ > 0.0f)
+		{
+			worldTransform_.translation_.x = -15.0f;
+		}
+		else
+		{
+			worldTransform_.translation_.x = 15.0f;
+		}
 
 	}
 
