@@ -13,7 +13,7 @@ void bloc::Initialize(Model* model, Camera* camera) {
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, 5.0f, 0.0f};
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
@@ -150,9 +150,13 @@ void bloc::Move() {
 	
 }
 
-void bloc::Update() { Move(); }
+void bloc::Update() 
+{ 
+	Move();
+}
 
-void bloc::Draw() {
+void bloc::Draw() 
+{
 
 	// 積み上げたブロック
 	for (auto& block : blocks_) {
