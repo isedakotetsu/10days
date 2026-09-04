@@ -10,8 +10,6 @@ public:
 
 	void Update();
 
-	
-
 	void Draw();
 
 	~GameScene();
@@ -23,7 +21,6 @@ private:
 
 	// カメラ
 	KamataEngine::Camera camera_;
-	
 	
 
 	bloc* bloc_ = nullptr;

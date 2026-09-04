@@ -127,22 +127,36 @@ void bloc::Move() {
 		worldTransform_.translation_.y += 2.0f;
 
 		//カメラがblocについていく
-		camera_->translation_.y += 2.0f;
+		//camera_->translation_.y += 2.0f;
 	}
 
 
 	worldTransform_.translation_.x += moveDirection_;
 
 	// 右端
-	if (worldTransform_.translation_.x >= 15.0f) {
+	if (worldTransform_.translation_.x >= 5.0f) {
 		moveDirection_ = -0.2f;
 	}
 
 	// 左端
-	if (worldTransform_.translation_.x <= -15.0f) {
+	if (worldTransform_.translation_.x <= -5.0f) {
 		moveDirection_ = 0.2f;
 	}
-	
+	// ========================================
+	// カメラをゆるく追従
+	// ========================================
+
+	float cameraFollowStart = cameraStartPosition_.y * 0.02f;
+
+	if (worldTransform_.translation_.y > cameraFollowStart) {
+
+		// ブロックを画面の少し上に置く
+		float targetCameraY = worldTransform_.translation_.y - 3.0f;
+
+		// ゆっくり追いかける
+		camera_->translation_.y += (targetCameraY - camera_->translation_.y) * 0.03f;
+	}
+
 	updatetransform_->WorldTransformUpData(worldTransform_);
 	
 }

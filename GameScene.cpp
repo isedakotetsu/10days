@@ -13,7 +13,7 @@ void GameScene::Initialize() {
 	camera_.translation_ = {0.0f, 0.0f, -50.0f};
 
 	camera_.rotation_ = {0.0f, 0.0f, 0.0f};
-
+	
 	// モデル読み込み
 	modelBloc_ = Model::CreateFromOBJ("cube");
 
@@ -24,7 +24,7 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	bloc_->Update();
 
-	Camera();
+	camera_.UpdateMatrix();
 }
 
 void GameScene::Draw() {
