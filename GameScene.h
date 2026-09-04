@@ -65,4 +65,9 @@ private:
 	};
 	Phase phase_ = Phase::kPlay;
 
+	//背景
+	float cameraStartY_ = 0.0f;
+	KamataEngine::Sprite* haikei_ = nullptr;
+	KamataEngine::Sprite* haikei2_ = nullptr;
+
 };
