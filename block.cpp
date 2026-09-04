@@ -13,7 +13,7 @@ void block::Initialize(Model* model, Camera* camera)
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, 5.0f, 0.0f};
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
@@ -94,14 +94,13 @@ void block::Move()
 
 			float hitRight = bottomRight - hitRange;
 
-			// ====================================
+			
 			// 現在のブロックの中心が
 			// 当たり判定範囲に入っているか
-			// ====================================
+			
 
 			bool isHit = currentCenterX >= hitLeft && currentCenterX <= hitRight;
 
-			// ====================================
 			// 外れていたら落下
 			// ====================================
 			if (!isHit) 
@@ -113,9 +112,6 @@ void block::Move()
 			}
 		}
 
-		// ====================================
-		// 重なっているので固定
-		// ====================================
 
 		auto newblockk = std::make_unique<WorldTransform>();
 
@@ -140,9 +136,6 @@ void block::Move()
 
 	}
 
-	// ========================================
-	// 現在のブロックを左右に動かす
-	// ========================================
 
 	worldTransform_.translation_.x += moveDirection_;
 

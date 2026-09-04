@@ -7,7 +7,7 @@ class Player
 {
 public:
     // 初期化
-    void Initialize(KamataEngine::Model* model);
+	void Initialize(KamataEngine::Model* model);
 
     // 更新
     void Update(const block* blockObject);
