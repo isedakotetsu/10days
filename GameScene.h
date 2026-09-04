@@ -3,6 +3,9 @@
 #include "obstacles.h"
 #include "Player.h"
 
+#include "bloc.h"
+
+
 
 
 class GameScene 
@@ -11,6 +14,8 @@ public:
 	void Initialize();
 
 	void Update();
+
+	void Camera();
 
 	void Draw();
 
@@ -44,6 +49,11 @@ private:
 
     //デバックカメラ
     KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+	bloc* bloc_ = nullptr;
+
+	KamataEngine::Model* modelBloc_ = nullptr;
+
 
 
 	enum class Phase {

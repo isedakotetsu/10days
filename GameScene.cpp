@@ -66,6 +66,12 @@ void GameScene::Initialize()
 
 	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
+
+	// モデル読み込み
+	modelBloc_ = Model::CreateFromOBJ("cube");
+
+	bloc_ = new bloc();
+	bloc_->Initialize(modelBloc_, &camera_);
 }
 
 void GameScene::Update() 
@@ -76,8 +82,8 @@ void GameScene::Update()
 		
 		obstacles_->UpDate();
 		player_->Update();
-
-		
+        bloc_->Update();
+	
 
 		if (IsCollisionAABB(player_->GetPosition(), player_->GetHalfSize(),
             obstacles_->GetPosition(), obstacles_->GetHalfSize()))
@@ -128,11 +134,14 @@ void GameScene::Draw()
 	obstacles_->Draw(camera_);
     // プレイヤーを描画
     player_->Draw(camera_);
+    bloc_->Draw();
     
     
 
     // 3Dモデルの描画終了
     Model::PostDraw();
+
+   
 }
 
 GameScene::~GameScene()
