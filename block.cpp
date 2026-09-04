@@ -13,22 +13,20 @@ void block::Initialize(Model* model, Camera* camera)
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {0.0f, 5.0f, 0.0f};
+	worldTransform_.translation_ = {-15.0f, 0.564447f, 0.0f};
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
 	worldTransform_.TransferMatrix();
-
 }
 
-void block::Move() 
+void block::Move(const Vector3& playerPosition) 
 {
 	// ========================================
 	// 落下中
 	// ========================================
 	if (isFalling_) 
 	{
-
 		worldTransform_.translation_.y -= fallSpeed_;
 
 		// 画面外まで落ちたら止める
@@ -40,7 +38,7 @@ void block::Move()
 			blocks_.clear();
 
 			// 最初の位置に戻す
-			worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+			worldTransform_.translation_ = {-15.0f, 0.564447f, 0.0f};
 
 			// 最初の移動方向に戻す
 			moveDirection_ = 0.2f;
@@ -55,9 +53,12 @@ void block::Move()
 	}
 
 	// ========================================
-	// ENTERを押したら固定（SPACEはプレイヤーのジャンプに使用）
+	// プレイヤーが移動中のブロック上面へ着地したら固定
 	// ========================================
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) 
+	if (playerPosition.x >= worldTransform_.translation_.x - blockkWidth_ / 2.0f &&
+		playerPosition.x <= worldTransform_.translation_.x + blockkWidth_ / 2.0f &&
+		playerPosition.y - 0.635770f >= worldTransform_.translation_.y + blockHeight_ / 2.0f - 0.05f &&
+		playerPosition.y - 0.635770f <= worldTransform_.translation_.y + blockHeight_ / 2.0f + 0.05f)
 	{
 		// ------------------------------------
 		// 下にブロックがある場合
@@ -74,12 +75,7 @@ void block::Move()
 			// 下のブロックの中心
 			float bottomCenterX = bottomblockk->translation_.x;
 
-			// 現在のブロックの左端・右端
-			// float currentLeft = currentCenterX - blockkWidth_ / 2.0f;
-
-			// float currentRight = currentCenterX + blockkWidth_ / 2.0f;
-
-		// 下のブロックの左端・右端
+		    // 下のブロックの左端・右端
 			float bottomLeft = bottomCenterX - blockkWidth_ / 2.0f;
 
 			float bottomRight = bottomCenterX + blockkWidth_ / 2.0f;
@@ -132,7 +128,7 @@ void block::Move()
 		// ====================================
 		// 次のブロックを1個上へ
 		// ====================================
-		worldTransform_.translation_.y += 2.0f;
+		worldTransform_.translation_.y += blockHeight_;
 
 	}
 
@@ -140,12 +136,14 @@ void block::Move()
 	worldTransform_.translation_.x += moveDirection_;
 
 	// 右端
-	if (worldTransform_.translation_.x >= 15.0f) {
+	if (worldTransform_.translation_.x >= 15.0f) 
+	{
 		moveDirection_ = -0.2f;
 	}
 
 	// 左端
-	if (worldTransform_.translation_.x <= -15.0f) {
+	if (worldTransform_.translation_.x <= -15.0f) 
+	{
 		moveDirection_ = 0.2f;
 	}
 	// 座標をワールド行列へ反映
@@ -155,9 +153,9 @@ void block::Move()
 	worldTransform_.TransferMatrix();
 }
 
-void block::Update() 
+void block::Update(const Vector3& playerPosition) 
 { 
-	Move(); 
+	Move(playerPosition); 
 }
 
 void block::Draw() 

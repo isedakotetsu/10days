@@ -1,40 +1,27 @@
 #include "GameScene.h"
 #include "KamataEngine.h"
 #include "TitleScene.h"
-#include "GameClear.h"
-#include "GameOver.h"
-
-
 
 TitleScene* titleScene = nullptr;
 GameScene* gameScene = nullptr;
-GameClear* gameClearScene = nullptr;
-GameOver* gameOverScene = nullptr;
 
-enum class Scene {
+enum class Scene 
+{
 	kUnknown = 0,
 	kTitle,
 	kGame,
-	kGameOver,
-	kGameClear,
 };
 
 // 現在シーン（型）
 Scene scene = Scene::kTitle;
-void ChangeScene() {
-
+void ChangeScene() 
+{
 	switch (scene)
 	{
 	case Scene::kTitle:
-		
-
 		if (titleScene->IsFinished()) 
 		{
-
-			
 			scene = Scene::kGame;
-
-			
 
 			delete titleScene;
 			titleScene = nullptr;
@@ -43,10 +30,9 @@ void ChangeScene() {
 			gameScene->Initialize();
 		}
 		break;
-
 	case Scene::kGame:
-		
-		if (gameScene->IsDead()) {
+	/*	if (gameScene->IsDead()) 
+		{
 			scene = Scene::kGameOver;
 
 			delete gameScene;
@@ -54,36 +40,20 @@ void ChangeScene() {
 
 			gameOverScene = new GameOver;
 			gameOverScene->Initialize();
-		}
-
-		break;
-
-	case Scene::kGameOver:
-		
-
-		break;
-
-	case Scene::kGameClear:
-		
-
+		}*/
 		break;
 	}
 }
 
 void DrawScene() 
 {
-	switch (scene) {
+	switch (scene) 
+	{
 	case Scene::kTitle:
 		titleScene->Draw();
 		break;
 	case Scene::kGame:
 		gameScene->Draw();
-		break;
-	case Scene::kGameOver:
-		gameOverScene->Draw();
-		break;
-	case Scene::kGameClear:
-		gameClearScene->Draw();
 		break;
 	}
 }
@@ -91,7 +61,6 @@ void DrawScene()
 // Windowsアプリでのエントリーポイント
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-
 	// エンジン初期化
 	Initialize(L"3062");
 	// DirectX取得
@@ -105,25 +74,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 
 		// エンジン更新（終了チェック）
-		if (Update()) 
+		if (KamataEngine::Update()) 
 		{
 			break;
 		}
 		// シーンごとにUpdate
-		switch (scene) {
+		switch (scene) 
+		{
 		case Scene::kTitle:
-			titleScene->UpDate();
+			titleScene->Update();
 			break;
 		case Scene::kGame:
 			// ImGuiの開始処理
 			gameScene->Update();
 
-			break;
-		case Scene::kGameOver:
-			gameOverScene->UpDate();
-			break;
-		case Scene::kGameClear:
-			gameClearScene->UpDate();
 			break;
 		}
 

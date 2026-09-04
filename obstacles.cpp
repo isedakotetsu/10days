@@ -10,12 +10,12 @@ void obstacles::Initialize(KamataEngine::Model* model, const KamataEngine::Vecto
 	model_ = model;
 }
 
-void obstacles::UpDate()
+void obstacles::Update()
 {
 	// Y座標を徐々に上げる
 	//worldTransform_.translation_.y += 0.2f;
 
-	updatetransform_->WorldTransformUpData(worldTransform_);
+	updatetransform_->WorldTransformUpdate(worldTransform_);
 }
 
 void obstacles::Draw(KamataEngine::Camera& camera)

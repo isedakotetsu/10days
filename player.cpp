@@ -7,6 +7,7 @@ void Player::Initialize(Model* model)
 {
     // GameSceneからモデルを受け取る
     model_ = model;
+
     // キーボード入力を取得
     input_ = Input::GetInstance();
 
@@ -26,7 +27,7 @@ void Player::Initialize(Model* model)
     worldTransform_.translation_ = 
     {
         0.0f,
-        5.0f,
+        0.635770f,
         0.0f
     };
 
@@ -174,7 +175,7 @@ void Player::ResolveBlockCollision(
         worldTransform_.translation_.x - kPlayerHalfWidth;
     float playerRight =
         worldTransform_.translation_.x + kPlayerHalfWidth;
-    float playerBottom = worldTransform_.translation_.y;
+    float playerBottom = worldTransform_.translation_.y - 0.635770f;
     float playerTop = playerBottom + kPlayerHeight;
 
     const bool overlapsX =
@@ -187,7 +188,7 @@ void Player::ResolveBlockCollision(
         playerBottom <= blockTop + kContactTolerance &&
         velocityY_ <= 0.0f)
     {
-        worldTransform_.translation_.y = blockTop;
+        worldTransform_.translation_.y = blockTop + 0.635770f;
         velocityY_ = 0.0f;
         isOnGround_ = true;
         return;
@@ -203,15 +204,15 @@ void Player::ResolveBlockCollision(
 
     const float previousLeft = previousPosition.x - kPlayerHalfWidth;
     const float previousRight = previousPosition.x + kPlayerHalfWidth;
-    const float previousBottom = previousPosition.y;
-    const float previousTop = previousPosition.y + kPlayerHeight;
+    const float previousBottom = previousPosition.y - 0.635770f;
+    const float previousTop = previousBottom + kPlayerHeight;
 
     // 上から着地
     // 前のフレームで足元がブロック上面以上にあった場合だけ着地させる
     if (previousBottom >= blockTop - kContactTolerance &&
         velocityY_ <= 0.0f)
     {
-        worldTransform_.translation_.y = blockTop;
+        worldTransform_.translation_.y = blockTop + 0.635770f;
         velocityY_ = 0.0f;
         isOnGround_ = true;
         return;
@@ -220,7 +221,7 @@ void Player::ResolveBlockCollision(
     // 下からぶつかった場合
     if (previousTop <= blockBottom + kContactTolerance && velocityY_ > 0.0f)
     {
-        worldTransform_.translation_.y = blockBottom - kPlayerHeight;
+        worldTransform_.translation_.y = blockBottom - (kPlayerHeight - 0.635770f);
         velocityY_ = 0.0f;
         return;
     }

@@ -2,7 +2,8 @@
 #include "KamataEngine.h"
 #include <memory>
 #include <vector>
-#include "UpData.h"
+#include "Update.h"
+
 using namespace KamataEngine;
 
 class block 
@@ -12,10 +13,10 @@ public:
 	void Initialize(Model* model, Camera* camera);
 
 	// 動き
-	void Move();
+	void Move(const Vector3& playerPosition);
 
 	/// 更新
-	void Update();
+	void Update(const Vector3& playerPosition);
 
 	/// 描画
 	void Draw();
@@ -43,7 +44,7 @@ private:
 
 	// 今動いているブロック
 	WorldTransform worldTransform_;
-	UpData* updatetransform_ = nullptr;
+    ::Update* updatetransform_ = nullptr;
 	// 積み上げたブロック
 	std::vector<std::unique_ptr<WorldTransform>> blocks_;
 
@@ -51,9 +52,9 @@ private:
 	float moveDirection_ = 0.2f;
 
 	// ブロックの横幅
-	float blockkWidth_ = 4.0f;
+	float blockkWidth_ = 1.132540f;
 	// ブロックの高さ
-	float blockHeight_ = 2.0f;
+	float blockHeight_ = 1.128894f;
 
 	// 落下速度
 	float fallSpeed_ = 0.2f;

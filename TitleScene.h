@@ -4,10 +4,11 @@
 
 using namespace KamataEngine;
 
-class TitleScene {
+class TitleScene 
+{
 public:
-
-	enum class Phase {
+	enum class Phase 
+	{
 		kFadeIn,  // フェードイン
 		kMain,    // メイン部
 		kFadeOut, // フェードアウト
@@ -17,8 +18,7 @@ public:
 
 	void Initialize();
 
-
-	void UpDate();
+	void Update();
 
 	void Draw();
 
@@ -28,10 +28,8 @@ private:
 
 	bool finished_ = false;
 
-	// 02_13 12枚目
 	Fade* fade_ = nullptr;
 
-	//現在のフェーズ
 	Phase phase_ = Phase::kFadeIn;
 
 	uint32_t textureHandle_;

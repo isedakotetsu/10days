@@ -7,7 +7,7 @@ class Player
 {
 public:
     // 初期化
-	void Initialize(KamataEngine::Model* model);
+    void Initialize(KamataEngine::Model* model);
 
     // 更新
     void Update(const block* blockObject);
@@ -47,11 +47,11 @@ private:
     bool isOnGround_ = true;
 
     // 地面の高さ
-    static inline const float kGroundY = 0.0f;
+    static inline const float kGroundY = 0.635770f;
 
     // 当たり判定ではtranslation_を足元の座標として扱う
-    static inline const float kPlayerHalfWidth = 0.5f;
-    static inline const float kPlayerHeight = 2.0f;
+    static inline const float kPlayerHalfWidth = 0.365364f;
+    static inline const float kPlayerHeight = 1.233062f;
 
     // 1個のブロックとの当たり判定
     void ResolveBlockCollision(
