@@ -49,8 +49,8 @@ void bloc::Move() {
 			moveDirection_ = 0.2f;
 		}
 
-		worldTransform_.UpdateMatrix();
-		worldTransform_.TransferMatrix();
+		updatetransform_->WorldTransformUpData(worldTransform_);
+		
 
 		return;
 	}
@@ -91,16 +91,15 @@ void bloc::Move() {
 
 			float hitRight = bottomRight - hitRange;
 
-			// ====================================
+			
 			// 現在のブロックの中心が
 			// 当たり判定範囲に入っているか
-			// ====================================
+			
 
 			bool isHit = currentCenterX >= hitLeft && currentCenterX <= hitRight;
 
-			// ====================================
 			// 外れていたら落下
-			// ====================================
+			
 			if (!isHit) {
 
 				isFalling_ = true;
@@ -109,9 +108,6 @@ void bloc::Move() {
 			}
 		}
 
-		// ====================================
-		// 重なっているので固定
-		// ====================================
 
 		auto newBlock = std::make_unique<WorldTransform>();
 
@@ -122,23 +118,18 @@ void bloc::Move() {
 
 		newBlock->rotation_ = worldTransform_.rotation_;
 
-		newBlock->UpdateMatrix();
-		newBlock->TransferMatrix();
+		updatetransform_->WorldTransformUpData(*newBlock);
+		//newBlock->TransferMatrix();
 
 		// 固定ブロックとして追加
 		blocks_.push_back(std::move(newBlock));
-		// ====================================
-		// 次のブロックを1個上へ
-		// ====================================
+		
 		worldTransform_.translation_.y += 2.0f;
 
 		//カメラがblocについていく
 		camera_->translation_.y += 2.0f;
 	}
 
-	// ========================================
-	// 現在のブロックを左右に動かす
-	// ========================================
 
 	worldTransform_.translation_.x += moveDirection_;
 
@@ -151,9 +142,9 @@ void bloc::Move() {
 	if (worldTransform_.translation_.x <= -15.0f) {
 		moveDirection_ = 0.2f;
 	}
-	// ★ 行列を再計算する処理を追加
-	worldTransform_.UpdateMatrix();
-	worldTransform_.TransferMatrix();
+	
+	updatetransform_->WorldTransformUpData(worldTransform_);
+	
 }
 
 void bloc::Update() { Move(); }

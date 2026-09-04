@@ -2,6 +2,7 @@
 #include "KamataEngine.h"
 #include <memory>
 #include <vector>
+#include "UpData.h"
 using namespace KamataEngine;
 
 class bloc {
@@ -26,6 +27,7 @@ private:
 
 	// 今動いているブロック
 	WorldTransform worldTransform_;
+	UpData* updatetransform_ = nullptr;
 	// 積み上げたブロック
 	std::vector<std::unique_ptr<WorldTransform>> blocks_;
 

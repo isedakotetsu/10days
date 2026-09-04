@@ -181,11 +181,14 @@ xcopy "$(ProjectDir)..\External\KamataEngine\shaders" "$(ProjectDir)Resources\En
     <ClCompile Include="bloc.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="WorldTransformEx.cpp" />
+    <ClCompile Include="Math.cpp" />
+    <ClCompile Include="UpData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bloc.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Math.h" />
+    <ClInclude Include="UpData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
