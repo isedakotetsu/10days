@@ -178,17 +178,31 @@ xcopy "$(ProjectDir)..\External\KamataEngine\shaders" "$(ProjectDir)Resources\En
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bloc.cpp" />
+    <ClCompile Include="block.cpp" />
+    <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="obstacles.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="UpData.cpp" />
+    <ClCompile Include="Update.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bloc.h" />
+    <ClInclude Include="block.h" />
+    <ClInclude Include="Fade.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="obstacles.h" />
+    <ClInclude Include="player.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="UpData.h" />
+    <ClInclude Include="Update.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

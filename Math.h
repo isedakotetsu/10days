@@ -1,10 +1,5 @@
 #pragma once
-
 #include <KamataEngine.h>
-
-// class Math
-//{
-// public:
 
 // 加算
 KamataEngine::Vector3 Add(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2);
@@ -91,7 +86,8 @@ float Lerp(float x1, float x2, float t);
 
 KamataEngine::Vector3 Lerp(const KamataEngine::Vector3& v1, const KamataEngine::Vector3& v2, float t);
 
-struct AABB {
+struct AABB 
+{
 	KamataEngine::Vector3 min;
 	KamataEngine::Vector3 max;
 };
@@ -101,4 +97,3 @@ bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 // 02_15 で追加
 inline float ToRadians(float degrees) { return degrees * (3.1415f / 180.0f); }
 inline float ToDegrees(float radians) { return radians * (180.0f / 3.1415f); }
-//}
