@@ -63,6 +63,24 @@ void GameScene::Initialize()
 	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
 
+
+
+	// 3Dスコアを生成
+	score3D_ = new Score3D();
+
+	// スコア用の0～9のモデルを読み込む
+	for (int i = 0; i < 10; i++) {
+		number_[i] = Model::CreateFromOBJ(std::to_string(i));
+	}
+
+	// 10個全部読み込んだ「あと」に初期化
+	score3D_->Initialize(number_, &camera_);
+
+	//score3D_->SetPosition({5.0f, 5.0f, 0.0f});
+
+	// 初期スコア
+	score3D_->SetScore(score_);
+	
 	 // 背景の初期化
 	uint32_t haikeiTextureHandle_ = TextureManager::Load("school.png");
 	haikei_ = Sprite::Create(haikeiTextureHandle_, {0, 0});
@@ -74,10 +92,16 @@ void GameScene::Initialize()
 
 	haikei2_->SetSize({1280, 720});
 
+
+	
+
 }
 
 void GameScene::Update() 
 {
+	
+
+
 	
 	  if (phase_ == Phase::kPlay)
 	  {
@@ -119,8 +143,9 @@ void GameScene::Update()
 
 		// スコア加算
 		score_ += 100 * combo_;
-
-
+		// 初期スコア
+		score3D_->SetScore(score_);
+		
 		// ブロック数を更新
 		previousBlockCount_ = currentBlockCount;
 
@@ -178,6 +203,9 @@ void GameScene::Draw()
 
 	block_->Draw();
 
+	// スコア
+	score3D_->Draw();
+
 	// 3Dモデルの描画終了
 	Model::PostDraw();
 }
@@ -193,7 +221,10 @@ GameScene::~GameScene() {
 
 	delete block_;
 	block_ = nullptr;
-
+	delete score3D_;
+	for (int i = 0; i < 10; i++) {
+		delete number_[i];
+	}
 	delete modelBlock_;
 	modelBlock_ = nullptr;
 }

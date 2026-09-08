@@ -33,7 +33,7 @@ void block::Move(const Vector3& playerPosition) {
 		worldTransform_.translation_.y -= fallSpeed_;
 
 		// 画面外まで落ちたら止める
-		if (worldTransform_.translation_.y < -20.0f) 
+		if (worldTransform_.translation_.y < -1.0f) 
 		{
 			isFalling_ = false;
 
@@ -100,6 +100,8 @@ void block::Move(const Vector3& playerPosition) {
 			if (!isHit) {
 
 				isFalling_ = true;
+				comboCount_ = 0; // ←追加
+
 
 				return;
 			}
@@ -127,6 +129,8 @@ void block::Move(const Vector3& playerPosition) {
 
 		// コンボを増やす
 		comboCount_++;
+
+	printf("Combo: %d  Speed: %f\n", comboCount_, moveSpeed_);
 
 		// コンボ数に応じてスピードアップ
 		if (comboCount_ % 3 == 0) {
@@ -168,7 +172,7 @@ void block::Move(const Vector3& playerPosition) {
 	 ========================================*/
 
 	// 積み上がったブロックの数に応じてカメラの目標Yを決める 
-	float targetCameraY = cameraStartPosition_.y + blocks_.size() * blockHeight_ + 1.0f;
+	float targetCameraY = cameraStartPosition_.y + blocks_.size() * blockHeight_ - 2.0f;
 
 	// カメラをゆっくり目標位置へ近づける
 	float cameraSpeed = 0.01f;

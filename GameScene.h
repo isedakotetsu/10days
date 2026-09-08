@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "block.h"
+#include "Score3D.h"
 #include <KamataEngine.h>
 #include "obstacles.h"
 
@@ -50,6 +51,8 @@ private:
 
 	// スコア
 	int score_ = 0;
+	Score3D* score3D_ = nullptr;
+	KamataEngine::Model* number_[10]{};
 
 	// 前回のブロック数
 	int previousBlockCount_ = 0;
