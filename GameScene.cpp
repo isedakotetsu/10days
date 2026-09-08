@@ -43,6 +43,8 @@ void GameScene::Initialize()
 	// カメラの向き
 	camera_.rotation_ = {0.0f, 0.0f, 0.0f};
 
+	cameraStartY_ = camera_.translation_.y;
+
 	// モデル読み込み
 	modelBlock_ = Model::CreateFromOBJ("block");
 	// ブロックを生成
@@ -56,6 +58,17 @@ void GameScene::Initialize()
 
 	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
+
+	 // 背景の初期化
+	uint32_t haikeiTextureHandle_ = TextureManager::Load("school.png");
+	haikei_ = Sprite::Create(haikeiTextureHandle_, {0, 0});
+
+	haikei_->SetSize({1280, 720});
+	haikei_->SetPosition({0, 0});
+
+	haikei2_ = Sprite::Create(haikeiTextureHandle_, {0, -720});
+
+	haikei2_->SetSize({1280, 720});
 
 }
 
@@ -104,13 +117,41 @@ void GameScene::Update()
 		combo_ = 0;
 	}
 
+	 // 背景の位置をカメラの移動に合わせて更新
+	float cameraMoveY = camera_.translation_.y - cameraStartY_;
+	float scrollY = cameraMoveY;
+	float backgroundY1 = scrollY;
+	float backgroundY2 = scrollY - 720.0f;
+
+	if (backgroundY1 >= 720.0f) {
+		backgroundY1 -= 1440.0f;
+	}
+
+	if (backgroundY2 >= 720.0f) {
+		backgroundY2 -= 1440.0f;
+	}
+
+	haikei_->SetPosition({0.0f, backgroundY1});
+	haikei2_->SetPosition({0.0f, backgroundY2});
+
 	
 
 	// 変更したカメラ位置と向きを反映
 	camera_.UpdateMatrix();
 }
 
-void GameScene::Draw() {
+void GameScene::Draw() 
+{
+
+	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
+
+	Sprite::PreDraw();
+	haikei_->Draw();
+	haikei2_->Draw();
+	Sprite::PostDraw();
+
+	dxCommon->ClearDepthBuffer();
+
 	// 3Dモデルの描画開始
 	Model::PreDraw();
 
