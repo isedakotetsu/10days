@@ -55,7 +55,7 @@ void DrawScene() {
 // Windowsアプリでのエントリーポイント
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// エンジン初期化
-	Initialize(L"3062");
+	Initialize(L"3062_LE3Dイセダ_LE3Dサクラバ_LE3Dサトウユ_LE3Dナツ_焼き鳥になりたくない");
 	// DirectX取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 

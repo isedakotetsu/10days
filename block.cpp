@@ -45,6 +45,9 @@ void block::Move(const Vector3& playerPosition) {
 			// カメラも初期位置へ
 			camera_->translation_ = cameraStartPosition_;
 
+			// コンボと速度をリセット
+			comboCount_ = 0;
+			moveSpeed_ = 0.05f;
 			// 最初の移動方向に戻す
 			// moveDirection_ = 0.2f;
 		}
@@ -128,13 +131,21 @@ void block::Move(const Vector3& playerPosition) {
 		// 固定ブロックとして追加
 		blocks_.push_back(std::move(newblockk));
 
+		// コンボを増やす
+		comboCount_++;
+
+		// コンボ数に応じてスピードアップ
+		if (comboCount_ % 3 == 0) {
+			moveSpeed_ += 0.02f;
+		}
+
+		// 次のブロックを上へ
 		worldTransform_.translation_.y += blockHeight_;
 		
 		// カメラがblocについていく
 		// camera_->translation_.y += 2.0f;
 	}
-
-	worldTransform_.translation_.x += moveDirection_;
+	worldTransform_.translation_.x += moveDirection_ * (moveSpeed_ / 0.05f);
 
 	// 右端
 	if (worldTransform_.translation_.x >= 5.0f) {

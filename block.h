@@ -55,6 +55,9 @@ private:
 	// 落下速度
 	float fallSpeed_ = 0.2f;
 
+	int comboCount_ = 0;      // 現在のコンボ数
+	float moveSpeed_ = 0.05f; // ブロックの基本速度
+
 	// カメラの初期位置
 	Vector3 cameraStartPosition_;
 	// カメラ
