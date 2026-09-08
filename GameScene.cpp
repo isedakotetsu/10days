@@ -63,6 +63,17 @@ void GameScene::Initialize()
 	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
 
+	//操作説明
+	//  1. モデル読み込み
+	modelAD_ = Model::CreateFromOBJ("move");
+	modelSpace_ = Model::CreateFromOBJ("space");
+
+	transformAD_.Initialize();
+	transformSpace_.Initialize();
+
+
+	transformAD_.translation_ = {-3.0f, 2.2f, 10.0f}; 
+	transformSpace_.translation_ = {-3.0f, 1.6f, 10.0f}; 
 
 
 	// 3Dスコアを生成
@@ -80,6 +91,9 @@ void GameScene::Initialize()
 
 	// 初期スコア
 	score3D_->SetScore(score_);
+
+	
+
 	
 	 // 背景の初期化
 	uint32_t haikeiTextureHandle_ = TextureManager::Load("school.png");
@@ -93,15 +107,23 @@ void GameScene::Initialize()
 	haikei2_->SetSize({1280, 720});
 
 
-	
-
 }
 
+void GameScene::UpdateExplanation() { // A/D の行列更新（カメラの位置を足す）
+	transformAD_.TransferMatrix();
+	transformAD_.matWorld_.m[3][0] = camera_.translation_.x + transformAD_.translation_.x;
+	transformAD_.matWorld_.m[3][1] = camera_.translation_.y + transformAD_.translation_.y;
+	transformAD_.matWorld_.m[3][2] = camera_.translation_.z + transformAD_.translation_.z;
+
+	// SPACE の行列更新（カメラの位置を足す）
+	transformSpace_.TransferMatrix();
+	transformSpace_.matWorld_.m[3][0] = camera_.translation_.x + transformSpace_.translation_.x;
+	transformSpace_.matWorld_.m[3][1] = camera_.translation_.y + transformSpace_.translation_.y;
+	transformSpace_.matWorld_.m[3][2] = camera_.translation_.z + transformSpace_.translation_.z;
+}
 void GameScene::Update() 
 {
-	
-
-
+	UpdateExplanation();
 	
 	  if (phase_ == Phase::kPlay)
 	  {
@@ -206,9 +228,14 @@ void GameScene::Draw()
 	// スコア
 	score3D_->Draw();
 
+	// 描画を呼ぶだけ
+	modelAD_->Draw(transformAD_, camera_);
+	modelSpace_->Draw(transformSpace_, camera_);
+
 	// 3Dモデルの描画終了
 	Model::PostDraw();
 }
+
 
 GameScene::~GameScene() {
 	// プレイヤーを解放

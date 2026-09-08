@@ -22,6 +22,9 @@ public:
 	// クリアしたことを感知する関数
 	bool IsClear() const { return phase_ == Phase::kClear; }
 
+	//操作説明
+	void UpdateExplanation();
+
 private:
 	// プレイヤー
 	Player* player_ = nullptr;
@@ -37,6 +40,14 @@ private:
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Model* Obstaclesmodel_ = nullptr;
 	KamataEngine::Vector3 ObstaclesPosition_;
+
+	//	操作説明
+	KamataEngine::Model* modelAD_ = nullptr;
+	KamataEngine::Model* modelSpace_ = nullptr;
+
+	KamataEngine::WorldTransform transformAD_;
+	KamataEngine::WorldTransform transformSpace_;
+
 
 	// デバックカメラ有効
 	//  ワールドトランスフォーム
