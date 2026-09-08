@@ -6,14 +6,14 @@ void obstacles::Initialize(KamataEngine::Model* model, const KamataEngine::Vecto
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = position;
-	worldTransform_.scale_ = {70.0f, 50.0f, 1.0f};
+	worldTransform_.scale_ = {25.0f, 35.0f, 1.0f};
 	model_ = model;
 }
 
 void obstacles::Update()
 {
 	// Y座標を徐々に上げる
-	//worldTransform_.translation_.y += 0.2f;
+    worldTransform_.translation_.y += 0.02f;
 
 	updatetransform_->WorldTransformUpdate(worldTransform_);
 }
