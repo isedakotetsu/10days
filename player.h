@@ -16,6 +16,7 @@ public:
 
 	// カメラ追従用のプレイヤー座標
 	const KamataEngine::Vector3& GetWorldPosition() const { return worldTransform_.translation_; }
+	KamataEngine::Vector3 GetHalfSize() const { return halfSize_; }
 
 private:
 	// プレイヤーモデル
@@ -54,4 +55,5 @@ private:
 
 	// 1個のブロックとの当たり判定
 	void ResolveBlockCollision(const KamataEngine::WorldTransform& blockWorldTransform, float blockWidth, float blockHeight, const KamataEngine::Vector3& previousPosition);
+	KamataEngine::Vector3 halfSize_ = {1.0f, 1.0f, 1.0f};
 };

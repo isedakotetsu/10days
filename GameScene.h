@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "block.h"
 #include <KamataEngine.h>
+#include "obstacles.h"
 
 using namespace KamataEngine;
 class GameScene {
@@ -14,17 +15,27 @@ public:
 
 	void Draw();
 
+	bool IsFinished() const { return phase_ == Phase::kDeath || phase_ == Phase::kClear; }
+	// 追加: 死亡したかどうかを判定する関数（main.cppで使用）
+	bool IsDead() const { return phase_ == Phase::kDeath; }
+	// クリアしたことを感知する関数
+	bool IsClear() const { return phase_ == Phase::kClear; }
+
 private:
 	// プレイヤー
 	Player* player_ = nullptr;
 
 	block* block_ = nullptr;
-
+	KamataEngine::Model* model_ = nullptr;
 	KamataEngine::Model* modelBlock_ = nullptr;
 
 	KamataEngine::Model* modelPlayer_ = nullptr;
 
 	KamataEngine::Camera camera_;
+	obstacles* obstacles_ = nullptr;
+	KamataEngine::WorldTransform worldTransform_;
+	KamataEngine::Model* Obstaclesmodel_ = nullptr;
+	KamataEngine::Vector3 ObstaclesPosition_;
 
 	// デバックカメラ有効
 	//  ワールドトランスフォーム
@@ -43,5 +54,13 @@ private:
 	// 前回のブロック数
 	int previousBlockCount_ = 0;
 
+	enum class Phase {
+		kFadeIn,
+		kPlay,
+		kDeath,
+		kFadeOut,
+		kClear,
+	};
+	Phase phase_ = Phase::kPlay;
 
 };
