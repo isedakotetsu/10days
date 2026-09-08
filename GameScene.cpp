@@ -120,6 +120,7 @@ void GameScene::Update()
 		// スコア加算
 		score_ += 100 * combo_;
 
+
 		// ブロック数を更新
 		previousBlockCount_ = currentBlockCount;
 
