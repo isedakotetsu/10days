@@ -76,4 +76,7 @@ private:
     KamataEngine::Sprite* haikei_ = nullptr;
     KamataEngine::Sprite* haikei2_ = nullptr;
 
+    // playerとobstacleの衝突判定用のフラグ
+    bool isObstacleStopped_ = false;
+    bool isPlayerStopped_ = false;
 };

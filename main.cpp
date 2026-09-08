@@ -62,7 +62,7 @@ void DrawScene()
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// エンジン初期化
-	Initialize(L"3062");
+	Initialize(L"3062_焼き鳥になりたくない");
 	// DirectX取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
