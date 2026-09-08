@@ -7,16 +7,20 @@
 
 
 // 障害物＆プレイヤーの当たり判定処理
-bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB) {
-	if (std::abs(posA.x - posB.x) > sizeA.x + sizeB.x) {
+bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB)
+{
+	
+	const float collisionMargin = 6.0f;
+
+	if (std::abs(posA.x - posB.x) > sizeA.x + sizeB.x + collisionMargin) {
 		return false;
 	}
 
-	if (std::abs(posA.y - posB.y) > sizeA.y + sizeB.y) {
+	if (std::abs(posA.y - posB.y) > sizeA.y + sizeB.y + collisionMargin) {
 		return false;
 	}
 
-	if (std::abs(posA.z - posB.z) > sizeA.z + sizeB.z) {
+	if (std::abs(posA.z - posB.z) > sizeA.z + sizeB.z + collisionMargin) {
 		return false;
 	}
 
@@ -27,7 +31,7 @@ void GameScene::Initialize()
 {
 	model_ = Model::Create();
 	// プレイヤーモデルを読み込む
-	modelPlayer_ = Model::CreateFromOBJ("player", true);
+	modelPlayer_ = Model::CreateFromOBJ("chicken", true);
 	// プレイヤーを生成
 	player_ = new Player();
 	// プレイヤーを初期化
@@ -74,23 +78,34 @@ void GameScene::Initialize()
 
 void GameScene::Update() 
 {
-	// ゲームプレイ中だけ更新
-	if (phase_ == Phase::kPlay) 
-	{
-
-		obstacles_->Update();
-		// プレイヤーを更新してブロックとの衝突を解決
-		player_->Update(block_);
-
-		if (IsCollisionAABB(player_->GetWorldPosition(), player_->GetHalfSize(), obstacles_->GetPosition(), obstacles_->GetHalfSize())) 
+	
+	  if (phase_ == Phase::kPlay)
+	  {
+		
+		if (!isObstacleStopped_)
 		{
+			obstacles_->Update();
+		}
 
-			phase_ = Phase::kDeath;
+		
+		if (!isPlayerStopped_)
+		{
+			player_->Update(block_);
+		}
+
+		// プレイヤーと障害物の衝突判定
+		if (IsCollisionAABB(player_->GetWorldPosition(),
+			player_->GetHalfSize(), obstacles_->GetPosition(),
+			obstacles_->GetHalfSize())) 
+		{
+			
+			isObstacleStopped_ = true;
+			isPlayerStopped_ = true;
 		}
 	}
 
-	// 前のフレームでプレイヤーが着地していればブロックを固定する
 	block_->Update(player_->GetWorldPosition());
+
 
 
 	// 積み上がったブロック数を取得
