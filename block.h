@@ -1,5 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
+#include "UpData.h"
 #include <memory>
 #include <vector>
 #include "Update.h"
@@ -49,12 +50,15 @@ private:
 	std::vector<std::unique_ptr<WorldTransform>> blocks_;
 
 	// 移動方向
-	float moveDirection_ = 0.2f;
+	float moveDirection_ = 0.05f;
 
 	// ブロックの横幅
 	float blockkWidth_ = 2.0f;
 	// ブロックの高さ
 	float blockHeight_ = 2.0f;
+
+	// 落下中か
+	bool isFalling_ = false;
 
 	// 落下速度
 	float fallSpeed_ = 0.2f;
@@ -65,4 +69,12 @@ private:
 	// 落下中か
 	bool isFalling_ = false;
 
+	int comboCount_ = 0;      // 現在のコンボ数
+	float moveSpeed_ = 0.05f; // ブロックの基本速度
+
+	// カメラの初期位置
+	Vector3 cameraStartPosition_;
+	// カメラ
+	float cameraOffsetY_ = 0.0f;
+	float cameraMoveY_ = 2.0f;
 };

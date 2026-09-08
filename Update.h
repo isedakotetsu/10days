@@ -4,6 +4,7 @@
 
 class Update
 {
+
 public:
 	void WorldTransformUpdate(KamataEngine::WorldTransform& worldTransform);
 

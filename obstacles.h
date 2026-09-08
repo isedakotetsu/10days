@@ -21,4 +21,6 @@ private:
 	KamataEngine::Model* model_;
 	::Update* updatetransform_ = nullptr;
 	KamataEngine::Vector3 halfSize_ = {70.0f, 50.0f, 1.0f};
+
+ 
 };
