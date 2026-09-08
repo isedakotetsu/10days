@@ -33,23 +33,17 @@ void block::Move(const Vector3& playerPosition) {
 		worldTransform_.translation_.y -= fallSpeed_;
 
 		// 画面外まで落ちたら止める
-		if (worldTransform_.translation_.y < -20.0f) {
+		if (worldTransform_.translation_.y < -20.0f) 
+		{
 			isFalling_ = false;
 
-			// 積んでいたブロックを全部削除
-			blocks_.clear();
 
-			// 最初の位置に戻す
-			worldTransform_.translation_ = {-15.0f, 1.0f, 0.0f};
+			// 落ちたブロックだけ初期位置へ戻す
+			worldTransform_.translation_ = {5.0f, blocks_.size() * blockHeight_, 0.0f};
 
-			// カメラも初期位置へ
-			camera_->translation_ = cameraStartPosition_;
 
-			// コンボと速度をリセット
-			comboCount_ = 0;
-			moveSpeed_ = 0.05f;
-			// 最初の移動方向に戻す
-			// moveDirection_ = 0.2f;
+			// 次のブロックの移動方向をリセット
+			moveDirection_ = -0.05f;
 		}
 
 		// updatetransform_->WorldTransformUpData(worldTransform_);
