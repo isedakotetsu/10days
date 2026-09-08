@@ -47,7 +47,6 @@ private:
     // 追従中、プレイヤーを画面中央より少し上に表示する値
     static inline const float kCameraPlayerScreenY = 1.0f;
 
-    KamataEngine::Camera camera_;
     obstacles* obstacles_ = nullptr;
     KamataEngine::WorldTransform worldTransform_;
     KamataEngine::Model* Obstaclesmodel_ = nullptr;

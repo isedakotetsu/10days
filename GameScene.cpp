@@ -72,20 +72,11 @@ void GameScene::Initialize()
     haikei_->SetPosition({ 0, 0 });
 
     haikei2_ = Sprite::Create(haikeiTextureHandle_, { 0, -720 });
-
     haikei2_->SetSize({ 1280, 720 });
 }
 
 void GameScene::Update() 
 {
-    //// 前のフレームでプレイヤーが着地していればブロックを固定する
-    //block_->Update(player_->GetWorldPosition());
-
-    //// プレイヤーを更新してブロックとの衝突を解決
-    //player_->Update(block_);
-
-    //// 変更したカメラ位置と向きを反映
-    //camera_.UpdateMatrix();
     // ゲームプレイ中だけ更新
     if (phase_ == Phase::kPlay)
     {
@@ -109,7 +100,8 @@ void GameScene::Update()
     int currentBlockCount = static_cast<int>(block_->GetBlocks().size());
 
     // ブロックが1個増えた
-    if (currentBlockCount > previousBlockCount_) {
+    if (currentBlockCount > previousBlockCount_) 
+    {
 
         // コンボ増加
         combo_++;
@@ -125,7 +117,8 @@ void GameScene::Update()
     }
 
     //コンボリセット
-    if (block_->IsFalling()) {
+    if (block_->IsFalling()) 
+    {
         combo_ = 0;
     }
 
@@ -135,11 +128,13 @@ void GameScene::Update()
     float backgroundY1 = scrollY;
     float backgroundY2 = scrollY - 720.0f;
 
-    if (backgroundY1 >= 720.0f) {
+    if (backgroundY1 >= 720.0f) 
+    {
         backgroundY1 -= 1440.0f;
     }
 
-    if (backgroundY2 >= 720.0f) {
+    if (backgroundY2 >= 720.0f) 
+    {
         backgroundY2 -= 1440.0f;
     }
 
@@ -160,7 +155,7 @@ void GameScene::Draw()
     haikei2_->Draw();
     Sprite::PostDraw();
 
-    dxCommon->ClearDepthBuffer();
+  /*  dxCommon->ClearDepthBuffer();*/
 
     // 3Dモデルの描画開始
     Model::PreDraw();
@@ -191,20 +186,4 @@ GameScene::~GameScene()
 
     delete modelBlock_;
     modelBlock_ = nullptr;
-}
-
-GameScene::~GameScene() {
-	// プレイヤーを解放
-	delete player_;
-	player_ = nullptr;
-
-	// プレイヤーモデルを解放
-	delete modelPlayer_;
-	modelPlayer_ = nullptr;
-
-	delete block_;
-	block_ = nullptr;
-
-	delete modelBlock_;
-	modelBlock_ = nullptr;
 }

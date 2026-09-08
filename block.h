@@ -1,6 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
-#include "UpData.h"
+#include "Update.h"
 #include <memory>
 #include <vector>
 #include "Update.h"
@@ -66,8 +66,6 @@ private:
 	//////////////フラグ////////////
 	// 停止しているか
 	bool isStop_ = false;
-	// 落下中か
-	bool isFalling_ = false;
 
 	int comboCount_ = 0;      // 現在のコンボ数
 	float moveSpeed_ = 0.05f; // ブロックの基本速度
