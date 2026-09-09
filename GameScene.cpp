@@ -80,6 +80,13 @@ void GameScene::Initialize()
 
     haikei2_ = Sprite::Create(haikeiTextureHandle_, { 0, -720 });
     haikei2_->SetSize({ 1280, 720 });
+
+    // 操作説明の初期化
+	uint32_t operationTextureHandle_ = TextureManager::Load("setumei.png");
+	operation_ = Sprite::Create(operationTextureHandle_, { 0, 0 });
+	operation_->SetSize({300, 300});
+	operation_->SetPosition({-10, -5});
+
 }
 
 void GameScene::Update() 
@@ -192,6 +199,8 @@ void GameScene::Draw()
     haikei_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
     haikei_->Draw();
     haikei2_->Draw();
+
+    operation_->Draw();
     Sprite::PostDraw();
 
     // 3Dモデルの描画開始
