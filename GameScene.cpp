@@ -8,7 +8,7 @@ using namespace KamataEngine;
 // 障害物＆プレイヤーの当たり判定処理
 bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB) 
 {
-    const float collisionMargin = 6.0f;
+    const float collisionMargin = -0.5f;
 
     if (std::abs(posA.x - posB.x) > sizeA.x + sizeB.x + collisionMargin)
     {

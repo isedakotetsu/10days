@@ -187,7 +187,6 @@ xcopy "$(ProjectDir)..\External\KamataEngine\shaders" "$(ProjectDir)Resources\En
     <ClCompile Include="player.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Update.cpp" />
-    <ClCompile Include="WorldTransformEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h" />

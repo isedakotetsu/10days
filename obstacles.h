@@ -20,7 +20,7 @@ private:
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Model* model_;
 	::Update* updatetransform_ = nullptr;
-	KamataEngine::Vector3 halfSize_ = {70.0f, 50.0f, 1.0f};
+	KamataEngine::Vector3 halfSize_ = {25.0f, 35.0f, 1.0f};
 
  
 };
