@@ -19,7 +19,7 @@ public:
 
 	void Draw();
 
-    bool IsFinished() const { return phase_ == Phase::kDeath || phase_ == Phase::kClear; }
+    bool IsFinished() const { return phase_ == Phase::kFadeOut || phase_ == Phase::kClear; }
     // 追加: 死亡したかどうかを判定する関数（main.cppで使用）
     bool IsDead() const { return phase_ == Phase::kDeath; }
     // クリアしたことを感知する関数
@@ -79,4 +79,8 @@ private:
     // playerとobstacleの衝突判定用のフラグ
     bool isObstacleStopped_ = false;
     bool isPlayerStopped_ = false;
+
+    // ゲームシーンBGM
+    uint32_t bgmHandle_ = 0;
+    uint32_t voiceHandle_ = 0;
 };

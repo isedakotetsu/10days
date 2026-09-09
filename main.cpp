@@ -31,16 +31,16 @@ void ChangeScene()
 		}
 		break;
 	case Scene::kGame:
-	/*	if (gameScene->IsDead()) 
+		if (gameScene->IsFinished())
 		{
-			scene = Scene::kGameOver;
+			scene = Scene::kTitle;
 
 			delete gameScene;
 			gameScene = nullptr;
 
-			gameOverScene = new GameOver;
-			gameOverScene->Initialize();
-		}*/
+			titleScene = new TitleScene;
+			titleScene->Initialize();
+		}
 		break;
 	}
 }
@@ -101,6 +101,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// 描画終了
 		dxCommon->PostDraw();
 	}
+
+	delete titleScene;
+	titleScene = nullptr;
 
 	delete gameScene;
 	gameScene = nullptr;

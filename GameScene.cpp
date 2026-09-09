@@ -31,6 +31,10 @@ bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vect
 
 void GameScene::Initialize() 
 {
+    // ゲームシーンBGMをループ再生
+    bgmHandle_ = Audio::GetInstance()->LoadWave("sound/gameBGM.mp3");
+    voiceHandle_ = Audio::GetInstance()->PlayWave(bgmHandle_, true, 0.15f);
+
     model_ = Model::Create();
     // プレイヤーモデルを読み込む
     modelPlayer_ = Model::CreateFromOBJ("player", true);
@@ -80,6 +84,18 @@ void GameScene::Initialize()
 
 void GameScene::Update() 
 {
+    // 障害物にぶつかった後は、ENTERが押されるまでゲームを停止する
+    if (phase_ == Phase::kDeath)
+    {
+        if (Input::GetInstance()->TriggerKey(DIK_RETURN))
+        {
+            phase_ = Phase::kFadeOut;
+        }
+
+        camera_.UpdateMatrix();
+        return;
+    }
+
     // ゲームプレイ中だけ更新
     if (phase_ == Phase::kPlay)
     {
@@ -102,7 +118,15 @@ void GameScene::Update()
 
             isObstacleStopped_ = true;
             isPlayerStopped_ = true;
+            phase_ = Phase::kDeath;
         }
+    }
+
+    // 衝突したフレームからブロックなどの更新も停止する
+    if (phase_ == Phase::kDeath)
+    {
+        camera_.UpdateMatrix();
+        return;
     }
         
 
@@ -165,11 +189,10 @@ void GameScene::Update()
 void GameScene::Draw()
 {
     Sprite::PreDraw();
+    haikei_->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
     haikei_->Draw();
     haikei2_->Draw();
     Sprite::PostDraw();
-
-  /*  dxCommon->ClearDepthBuffer();*/
 
     // 3Dモデルの描画開始
     Model::PreDraw();
@@ -183,10 +206,26 @@ void GameScene::Draw()
 
     // 3Dモデルの描画終了
     Model::PostDraw();
+
+    // 障害物にぶつかったら、画面全体を薄暗くする
+    if (phase_ == Phase::kDeath)
+    {
+        Sprite::PreDraw();
+        haikei_->SetPosition({ 0.0f, 0.0f });
+        haikei_->SetColor({ 0.0f, 0.0f, 0.0f, 0.55f });
+        haikei_->Draw();
+        Sprite::PostDraw();
+    }
 }
 
 GameScene::~GameScene()
 {
+    if (voiceHandle_ != 0)
+    {
+        Audio::GetInstance()->StopWave(voiceHandle_);
+        voiceHandle_ = 0;
+    }
+
     // プレイヤーを解放
     delete player_;
     player_ = nullptr;
