@@ -3,7 +3,8 @@
 
 class block;
 
-class Player {
+class Player
+{
 public:
 	// 初期化
 	void Initialize(KamataEngine::Model* model);
@@ -15,7 +16,10 @@ public:
 	void Draw(const KamataEngine::Camera& camera);
 
 	// カメラ追従用のプレイヤー座標
-	const KamataEngine::Vector3& GetWorldPosition() const { return worldTransform_.translation_; }
+    const KamataEngine::Vector3& GetWorldPosition() const
+    {
+        return worldTransform_.translation_;
+    }
 	KamataEngine::Vector3 GetHalfSize() const { return halfSize_; }
 
 private:
@@ -54,6 +58,11 @@ private:
 	static inline const float kPlayerHeight = 1.233062f;
 
 	// 1個のブロックとの当たり判定
-	void ResolveBlockCollision(const KamataEngine::WorldTransform& blockWorldTransform, float blockWidth, float blockHeight, const KamataEngine::Vector3& previousPosition);
-	KamataEngine::Vector3 halfSize_ = {1.0f, 1.0f, 1.0f};
+    void ResolveBlockCollision(
+        const KamataEngine::WorldTransform& blockWorldTransform,
+        float blockWidth,
+        float blockHeight,
+        const KamataEngine::Vector3& previousPosition);
+
+	KamataEngine::Vector3 halfSize_ = { 1.0f, 1.0f, 1.0f };
 };

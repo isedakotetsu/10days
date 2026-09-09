@@ -15,8 +15,7 @@ public:
 	void Update();
 
 	void Draw();
-
-	bool IsFinished() const { return phase_ == Phase::kDeath || phase_ == Phase::kClear; }
+	bool IsFinished() const { return phase_ == Phase::kFadeOut || phase_ == Phase::kClear; }
 	// 追加: 死亡したかどうかを判定する関数（main.cppで使用）
 	bool IsDead() const { return phase_ == Phase::kDeath; }
 	// クリアしたことを感知する関数
@@ -63,6 +62,8 @@ private:
 	// スコア
 	int score_ = 0;
 	Score3D* score3D_ = nullptr;
+	Score3D* deathScore3D_ = nullptr;
+
 	KamataEngine::Model* number_[10]{};
 
 	// 前回のブロック数
@@ -77,7 +78,7 @@ private:
 	};
 	Phase phase_ = Phase::kPlay;
 
-
+	float deathTimer_ = 0.0f;
 	// 背景
 	float cameraStartY_ = 0.0f;
 	KamataEngine::Sprite* haikei_ = nullptr;
@@ -86,4 +87,8 @@ private:
 	// playerとobstacleの衝突判定用のフラグ
 	bool isObstacleStopped_ = false;
 	bool isPlayerStopped_ = false;
+
+	  // ゲームシーンBGM
+	uint32_t bgmHandle_ = 0;
+	uint32_t voiceHandle_ = 0;
 };

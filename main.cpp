@@ -5,7 +5,8 @@
 TitleScene* titleScene = nullptr;
 GameScene* gameScene = nullptr;
 
-enum class Scene {
+enum class Scene 
+{
 	kUnknown = 0,
 	kTitle,
 	kGame,
@@ -13,10 +14,13 @@ enum class Scene {
 
 // 現在シーン（型）
 Scene scene = Scene::kTitle;
-void ChangeScene() {
-	switch (scene) {
+void ChangeScene() 
+{
+	switch (scene)
+	{
 	case Scene::kTitle:
-		if (titleScene->IsFinished()) {
+		if (titleScene->IsFinished()) 
+		{
 			scene = Scene::kGame;
 
 			delete titleScene;
@@ -27,22 +31,24 @@ void ChangeScene() {
 		}
 		break;
 	case Scene::kGame:
-		/*	if (gameScene->IsDead())
-		    {
-		        scene = Scene::kGameOver;
+		if (gameScene->IsFinished())
+		{
+			scene = Scene::kTitle;
 
-		        delete gameScene;
-		        gameScene = nullptr;
+			delete gameScene;
+			gameScene = nullptr;
 
-		        gameOverScene = new GameOver;
-		        gameOverScene->Initialize();
-		    }*/
+			titleScene = new TitleScene;
+			titleScene->Initialize();
+		}
 		break;
 	}
 }
 
-void DrawScene() {
-	switch (scene) {
+void DrawScene() 
+{
+	switch (scene) 
+	{
 	case Scene::kTitle:
 		titleScene->Draw();
 		break;
@@ -53,7 +59,8 @@ void DrawScene() {
 }
 
 // Windowsアプリでのエントリーポイント
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
 	// エンジン初期化
 	Initialize(L"3062_焼き鳥になりたくない");
 	// DirectX取得
@@ -63,14 +70,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	titleScene->Initialize();
 
 	// メインループ
-	while (true) {
+	while (true) 
+	{
 
 		// エンジン更新（終了チェック）
-		if (KamataEngine::Update()) {
+		if (KamataEngine::Update()) 
+		{
 			break;
 		}
 		// シーンごとにUpdate
-		switch (scene) {
+		switch (scene) 
+		{
 		case Scene::kTitle:
 			titleScene->Update();
 			break;
@@ -91,6 +101,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 描画終了
 		dxCommon->PostDraw();
 	}
+
+	delete titleScene;
+	titleScene = nullptr;
 
 	delete gameScene;
 	gameScene = nullptr;

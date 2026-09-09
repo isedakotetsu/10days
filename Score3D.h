@@ -17,9 +17,7 @@ public:
 	void SetScore(int score);
 
 	// 表示位置設定
-	void SetPosition(const KamataEngine::Vector3& position) {
-		position_ = position;
-	}
+	void SetPosition(const KamataEngine::Vector3& position);
 
 	// 描画
 	void Draw();
@@ -39,7 +37,7 @@ private:
 
 	// スコアの表示位置
 	KamataEngine::Vector3 position_ = {0.0f, 0.0f, 0.0f};
-
+	bool useCustomPosition_ = false;
 	// 数字同士の間隔
 	float digitSpacing_ = 5.0f;
 

@@ -1,15 +1,12 @@
 #include "GameScene.h"
-#include <cmath>
-
 #include <Windows.h>
+#include <cmath>
 #include <string>
-
-
+using namespace KamataEngine;
 
 // 障害物＆プレイヤーの当たり判定処理
-bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB)
-{
-	
+bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vector3& sizeA, const KamataEngine::Vector3& posB, const KamataEngine::Vector3& sizeB) {
+
 	const float collisionMargin = 6.0f;
 
 	if (std::abs(posA.x - posB.x) > sizeA.x + sizeB.x + collisionMargin) {
@@ -27,8 +24,12 @@ bool IsCollisionAABB(const KamataEngine::Vector3& posA, const KamataEngine::Vect
 	return true;
 }
 
-void GameScene::Initialize() 
-{
+void GameScene::Initialize() {
+
+	// ゲームシーンBGMをループ再生
+	bgmHandle_ = Audio::GetInstance()->LoadWave("sound/gameBGM.mp3");
+	voiceHandle_ = Audio::GetInstance()->PlayWave(bgmHandle_, true, 0.15f);
+
 	model_ = Model::Create();
 	// プレイヤーモデルを読み込む
 	modelPlayer_ = Model::CreateFromOBJ("chicken", true);
@@ -63,18 +64,16 @@ void GameScene::Initialize()
 	ObstaclesPosition_ = {0.0f, -70.0f, 0.0f};
 	obstacles_->Initialize(Obstaclesmodel_, ObstaclesPosition_);
 
-	//操作説明
-	//  1. モデル読み込み
+	// 操作説明
+	//   1. モデル読み込み
 	modelAD_ = Model::CreateFromOBJ("move");
 	modelSpace_ = Model::CreateFromOBJ("space");
 
 	transformAD_.Initialize();
 	transformSpace_.Initialize();
 
-
-	transformAD_.translation_ = {-3.0f, 2.2f, 10.0f}; 
-	transformSpace_.translation_ = {-3.0f, 1.6f, 10.0f}; 
-
+	transformAD_.translation_ = {-3.0f, 2.2f, 10.0f};
+	transformSpace_.translation_ = {-3.0f, 1.6f, 10.0f};
 
 	// 3Dスコアを生成
 	score3D_ = new Score3D();
@@ -87,15 +86,19 @@ void GameScene::Initialize()
 	// 10個全部読み込んだ「あと」に初期化
 	score3D_->Initialize(number_, &camera_);
 
-	//score3D_->SetPosition({5.0f, 5.0f, 0.0f});
+	// score3D_->SetPosition({5.0f, 5.0f, 0.0f});
 
 	// 初期スコア
 	score3D_->SetScore(score_);
 
 	
+	// 死亡画面用スコア
+	deathScore3D_ = new Score3D();
+	deathScore3D_->Initialize(number_, &camera_);
+	deathScore3D_->SetScore(score_);
+	deathScore3D_->SetPosition({0.0f, 0.0f, 3.0f});
 
-	
-	 // 背景の初期化
+	// 背景の初期化
 	uint32_t haikeiTextureHandle_ = TextureManager::Load("school.png");
 	haikei_ = Sprite::Create(haikeiTextureHandle_, {0, 0});
 
@@ -105,8 +108,6 @@ void GameScene::Initialize()
 	haikei2_ = Sprite::Create(haikeiTextureHandle_, {0, -720});
 
 	haikei2_->SetSize({1280, 720});
-
-
 }
 
 void GameScene::UpdateExplanation() { // A/D の行列更新（カメラの位置を足す）
@@ -121,38 +122,44 @@ void GameScene::UpdateExplanation() { // A/D の行列更新（カメラの位�
 	transformSpace_.matWorld_.m[3][1] = camera_.translation_.y + transformSpace_.translation_.y;
 	transformSpace_.matWorld_.m[3][2] = camera_.translation_.z + transformSpace_.translation_.z;
 }
-void GameScene::Update() 
-{
+void GameScene::Update() {
 	UpdateExplanation();
-	
-	  if (phase_ == Phase::kPlay)
-	  {
-		
-		if (!isObstacleStopped_)
-		{
+
+	if (phase_ == Phase::kPlay) {
+
+		if (!isObstacleStopped_) {
 			obstacles_->Update();
 		}
 
-		
-		if (!isPlayerStopped_)
-		{
+		if (!isPlayerStopped_) {
 			player_->Update(block_);
 		}
 
 		// プレイヤーと障害物の衝突判定
-		if (IsCollisionAABB(player_->GetWorldPosition(),
-			player_->GetHalfSize(), obstacles_->GetPosition(),
-			obstacles_->GetHalfSize())) 
-		{
-			
+		if (IsCollisionAABB(player_->GetWorldPosition(), player_->GetHalfSize(), obstacles_->GetPosition(), obstacles_->GetHalfSize())) {
+
 			isObstacleStopped_ = true;
 			isPlayerStopped_ = true;
+			// 死亡状態へ
+			phase_ = Phase::kDeath;
 		}
 	}
 
+	// 障害物にぶつかった後は、ENTERが押されるまでゲームを停止する
+	if (phase_ == Phase::kDeath) {
+
+		if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+			phase_ = Phase::kFadeOut;
+		}
+		
+
+		camera_.UpdateMatrix();
+		return;
+	}
+
+
+
 	block_->Update(player_->GetWorldPosition());
-
-
 
 	// 積み上がったブロック数を取得
 	int currentBlockCount = static_cast<int>(block_->GetBlocks().size());
@@ -167,7 +174,10 @@ void GameScene::Update()
 		score_ += 100 * combo_;
 		// 初期スコア
 		score3D_->SetScore(score_);
-		
+
+		//これはスコア暗闇で出すやつ
+		deathScore3D_->SetScore(score_);
+
 		// ブロック数を更新
 		previousBlockCount_ = currentBlockCount;
 
@@ -175,12 +185,12 @@ void GameScene::Update()
 		OutputDebugStringA(("Combo: " + std::to_string(combo_) + "  Score: " + std::to_string(score_) + "\n").c_str());
 	}
 
-	//コンボリセット
+	// コンボリセット
 	if (block_->IsFalling()) {
 		combo_ = 0;
 	}
 
-	 // 背景の位置をカメラの移動に合わせて更新
+	// 背景の位置をカメラの移動に合わせて更新
 	float cameraMoveY = camera_.translation_.y - cameraStartY_;
 	float scrollY = cameraMoveY;
 	float backgroundY1 = scrollY;
@@ -197,18 +207,24 @@ void GameScene::Update()
 	haikei_->SetPosition({0.0f, backgroundY1});
 	haikei2_->SetPosition({0.0f, backgroundY2});
 
-	
-
 	// 変更したカメラ位置と向きを反映
 	camera_.UpdateMatrix();
 }
 
-void GameScene::Draw() 
-{
+void GameScene::Draw() {
 
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 	Sprite::PreDraw();
+
+	// 障害物にぶつかったら、画面全体を薄暗くする
+	if (phase_ == Phase::kDeath) {
+		
+		haikei_->SetPosition({0.0f, 0.0f});
+		haikei_->SetColor({0.0f, 0.0f, 0.0f, 0.55f});
+		haikei_->Draw();
+		
+	}
 	haikei_->Draw();
 	haikei2_->Draw();
 	Sprite::PostDraw();
@@ -217,27 +233,44 @@ void GameScene::Draw()
 
 	// 3Dモデルの描画開始
 	Model::PreDraw();
-
+	// 死亡画面
+	if (phase_ == Phase::kDeath) {
+		deathScore3D_->Draw();
+	}
 	// 障害物を描画
 	obstacles_->Draw(camera_);
 	// プレイヤーを描画
 	player_->Draw(camera_);
 
 	block_->Draw();
+	if (phase_ == Phase::kPlay) {
+		// スコア
+		score3D_->Draw();
 
-	// スコア
-	score3D_->Draw();
+		// 描画を呼ぶだけ
+		modelAD_->Draw(transformAD_, camera_);
+		modelSpace_->Draw(transformSpace_, camera_);
 
-	// 描画を呼ぶだけ
-	modelAD_->Draw(transformAD_, camera_);
-	modelSpace_->Draw(transformSpace_, camera_);
+	}
 
+	
+	
+
+	
 	// 3Dモデルの描画終了
 	Model::PostDraw();
+
+	
+
 }
 
-
 GameScene::~GameScene() {
+
+	if (voiceHandle_ != 0) {
+		Audio::GetInstance()->StopWave(voiceHandle_);
+		voiceHandle_ = 0;
+	}
+
 	// プレイヤーを解放
 	delete player_;
 	player_ = nullptr;
@@ -245,6 +278,9 @@ GameScene::~GameScene() {
 	// プレイヤーモデルを解放
 	delete modelPlayer_;
 	modelPlayer_ = nullptr;
+
+	delete deathScore3D_;
+	deathScore3D_ = nullptr;
 
 	delete block_;
 	block_ = nullptr;

@@ -33,14 +33,11 @@ void block::Move(const Vector3& playerPosition) {
 		worldTransform_.translation_.y -= fallSpeed_;
 
 		// 画面外まで落ちたら止める
-		if (worldTransform_.translation_.y < -1.0f) 
-		{
+		if (worldTransform_.translation_.y < -1.0f) {
 			isFalling_ = false;
-
 
 			// 落ちたブロックだけ初期位置へ戻す
 			worldTransform_.translation_ = {5.0f, blocks_.size() * blockHeight_, 0.0f};
-
 
 			// 次のブロックの移動方向をリセット
 			moveDirection_ = -0.05f;
@@ -102,7 +99,6 @@ void block::Move(const Vector3& playerPosition) {
 				isFalling_ = true;
 				comboCount_ = 0; // ←追加
 
-
 				return;
 			}
 		}
@@ -130,14 +126,12 @@ void block::Move(const Vector3& playerPosition) {
 		// コンボを増やす
 		comboCount_++;
 
-	printf("Combo: %d  Speed: %f\n", comboCount_, moveSpeed_);
+		printf("Combo: %d  Speed: %f\n", comboCount_, moveSpeed_);
 
 		// コンボ数に応じてスピードアップ
 		if (comboCount_ % 3 == 0) {
 			moveSpeed_ += 0.02f;
 		}
-
-		
 
 		// 次のブロックを初期位置に戻す
 		worldTransform_.translation_.x = 5.0f;
@@ -146,7 +140,7 @@ void block::Move(const Vector3& playerPosition) {
 
 		// 移動方向もリセット
 		moveDirection_ = -0.05f;
-		
+
 		// カメラがblocについていく
 		// camera_->translation_.y += 2.0f;
 	}
@@ -171,7 +165,7 @@ void block::Move(const Vector3& playerPosition) {
 	     ブロックに合わせてカメラをゆるく追従
 	 ========================================*/
 
-	// 積み上がったブロックの数に応じてカメラの目標Yを決める 
+	// 積み上がったブロックの数に応じてカメラの目標Yを決める
 	float targetCameraY = cameraStartPosition_.y + blocks_.size() * blockHeight_ - 2.0f;
 
 	// カメラをゆっくり目標位置へ近づける

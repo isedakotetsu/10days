@@ -4,12 +4,22 @@ using namespace KamataEngine;
 
 TitleScene::~TitleScene() 
 {
+	if (voiceHandle_ != 0)
+	{
+		Audio::GetInstance()->StopWave(voiceHandle_);
+		voiceHandle_ = 0;
+	}
+
 	delete fade_;
 	delete sprite_;
 }
 
 void TitleScene::Initialize() 
 {
+	// タイトルBGMをループ再生
+	bgmHandle_ = Audio::GetInstance()->LoadWave("sound/titleBGM.mp3");
+	voiceHandle_ = Audio::GetInstance()->PlayWave(bgmHandle_, true, 0.15f);
+
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
@@ -43,6 +53,10 @@ void TitleScene::Update()
 		fade_->Update();
 		if (fade_->IsFinished()) 
 		{
+			// ゲームシーンへ切り替わる前にタイトルBGMを停止
+			Audio::GetInstance()->StopWave(voiceHandle_);
+			voiceHandle_ = 0;
+
 			finished_ = true;
 		}
 		break;

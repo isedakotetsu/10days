@@ -35,4 +35,8 @@ private:
 	uint32_t textureHandle_;
 
 	Sprite* sprite_ = nullptr;
+
+	// タイトルBGM
+	uint32_t bgmHandle_ = 0;
+	uint32_t voiceHandle_ = 0;
 };

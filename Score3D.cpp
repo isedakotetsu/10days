@@ -30,6 +30,12 @@ void Score3D::SetScore(int score) {
 	digits_.push_back(score % 10);           // 一の桁
 }
 
+void Score3D::SetPosition(const KamataEngine::Vector3& position) {
+
+	position_ = position;
+	useCustomPosition_ = true;
+}
+
 void Score3D::Draw() {
 	if (digits_.empty())
 		return;
@@ -44,9 +50,22 @@ void Score3D::Draw() {
 
 	float totalWidth = static_cast<float>(digits_.size()) * digitSpacing;
 
-	float startX = camera_->translation_.x + offsetX - totalWidth;
-	float startY = camera_->translation_.y + offsetY;
-	float startZ = camera_->translation_.z + distanceZ;
+	float startX;
+	float startY;
+	float startZ;
+
+	if (useCustomPosition_) {
+
+		startX = camera_->translation_.x + position_.x - totalWidth / 2.0f;
+		startY = camera_->translation_.y + position_.y;
+		startZ = camera_->translation_.z + position_.z;
+
+	} else {
+
+		startX = camera_->translation_.x + offsetX - totalWidth;
+		startY = camera_->translation_.y + offsetY;
+		startZ = camera_->translation_.z + distanceZ;
+	}
 
 	for (int i = 0; i < static_cast<int>(digits_.size()); i++) {
 		// メンバー変数の WorldTransform を安全に使用
