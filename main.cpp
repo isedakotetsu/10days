@@ -1,41 +1,109 @@
 #include "GameScene.h"
 #include "KamataEngine.h"
+#include "TitleScene.h"
 
-using namespace KamataEngine;
+TitleScene* titleScene = nullptr;
+GameScene* gameScene = nullptr;
+
+enum class Scene 
+{
+	kUnknown = 0,
+	kTitle,
+	kGame,
+};
+
+// 現在シーン（型）
+Scene scene = Scene::kTitle;
+void ChangeScene() 
+{
+	switch (scene)
+	{
+	case Scene::kTitle:
+		if (titleScene->IsFinished()) 
+		{
+			scene = Scene::kGame;
+
+			delete titleScene;
+			titleScene = nullptr;
+
+			gameScene = new GameScene;
+			gameScene->Initialize();
+		}
+		break;
+	case Scene::kGame:
+		if (gameScene->IsFinished())
+		{
+			scene = Scene::kTitle;
+
+			delete gameScene;
+			gameScene = nullptr;
+
+			titleScene = new TitleScene;
+			titleScene->Initialize();
+		}
+		break;
+	}
+}
+
+void DrawScene() 
+{
+	switch (scene) 
+	{
+	case Scene::kTitle:
+		titleScene->Draw();
+		break;
+	case Scene::kGame:
+		gameScene->Draw();
+		break;
+	}
+}
 
 // Windowsアプリでのエントリーポイント
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
 	// エンジン初期化
-	Initialize(L"LE3D_02_イセダ_コテツ");
+	Initialize(L"3062_焼き鳥になりたくない");
 	// DirectX取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
-	// シーン生成
-	GameScene* gameScene = nullptr;
-	gameScene = new GameScene();
-	gameScene->Initialize();
+	titleScene = new TitleScene;
+	titleScene->Initialize();
 
 	// メインループ
-	while (true) {
+	while (true) 
+	{
 
 		// エンジン更新（終了チェック）
-		if (Update()) {
+		if (KamataEngine::Update()) 
+		{
+			break;
+		}
+		// シーンごとにUpdate
+		switch (scene) 
+		{
+		case Scene::kTitle:
+			titleScene->Update();
+			break;
+		case Scene::kGame:
+			// ImGuiの開始処理
+			gameScene->Update();
+
 			break;
 		}
 
-		// シーン更新
-		gameScene->UpDate();
+		ChangeScene();
 
 		// 描画開始
 		dxCommon->PreDraw();
 
-		// シーン描画
-		gameScene->Draw();
+		DrawScene();
 
 		// 描画終了
 		dxCommon->PostDraw();
 	}
+
+	delete titleScene;
+	titleScene = nullptr;
 
 	delete gameScene;
 	gameScene = nullptr;
